@@ -2,6 +2,12 @@ from django.shortcuts import render, redirect
 from .models import Post
 from .form import UploadFileForm
 from django.contrib import messages
+from django.http import FileResponse
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from ipfs import ipfs_file
+import io
+import os
+import tempfile
 
 
 # Create your views here.
@@ -21,10 +27,12 @@ def upload(request):
         if form.is_valid():
 
             uploaded_document = request.FILES['file']
-            
-            ##output = your_document_processing_function(uploaded_document)
+            temp_file = tempfile.NamedTemporaryFile(delete=False)
 
-            uuid='Gig8149'
+            for chunk in uploaded_document:
+                temp_file.write(chunk)
+                
+            uuid=ipfs_file.upload(temp_file.name) 
 
             Post(uname=request.user,document=form.cleaned_data['Document_Name'],uid=uuid).save()
 
@@ -37,3 +45,10 @@ def upload(request):
 
 def about(request):
     return render(request,'doc/about.html')
+
+def document_retrive(request):
+    response=ipfs_file.retrive()
+    file_data=response.content
+    content_type = response.headers.get('content-type', 'application/octet-stream')
+    response = FileResponse(io.BytesIO(file_data), content_type=content_type)
+    return response
