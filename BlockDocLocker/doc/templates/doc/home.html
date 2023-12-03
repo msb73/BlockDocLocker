@@ -1,13 +1,38 @@
 {% extends "doc/base.html"%}
 {%block content%}
-{% if user.is_authenticated %}
+
+<article>
+  <div class="user-container col-md-12">
+    <div class="user-box">
+      <h2>User ID</h2>
+      <p>123abc</p> 
+    </div>
+
+    <div class="user-box">
+      <h2>User Address</h2>
+      <p>321bca</p>
+    </div>
+
+    <div class="user-box">
+      <h2>User Address</h2>
+      <p>321bca</p>
+    </div>
+
+    <!-- <div class="user-box">
+      <h2>User Address</h2>
+      <p>321bca</p>
+    </div> -->
+  </div>
+</article>
+
 <article>
   <div>
-    <table class="table table-hover">
+    <table class="table table-striped thead-dark">
       <tr>
         <th>Sr. No.</th>
         <th>Document</th>
-        <th>Date and Time Uploaded<th>
+        <th>Date and Time Uploaded
+        <th>
       </tr>
       {%for post in posts%}
       <tr>
@@ -22,10 +47,4 @@
     </table>
   </div>
 </article>
-{%else%}
-  <p>Login</p>
-
-{%endif%}
-
-
 {% endblock content%}

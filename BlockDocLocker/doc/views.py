@@ -32,7 +32,7 @@ def upload(request):
             for chunk in uploaded_document:
                 temp_file.write(chunk)
                 
-            uuid=ipfs_file.upload(temp_file.name) 
+            uuid=ipfs_file.upload((f"{temp_file.name}").replace("\\","/")) 
 
             Post(uname=request.user,document=form.cleaned_data['Document_Name'],uid=uuid).save()
 

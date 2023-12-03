@@ -6,8 +6,8 @@ class UserRegisterationForm(UserCreationForm):
     email=forms.EmailField()
     # image=forms.ImageField()
     PROFILE_TYPE_CHOICES = [
-        ('User', 'User'),
-        ('Agent', 'Agent'),
+        ('user', 'User'),
+        ('admin', 'Admin'),
     ]
 
     profile_type = forms.ChoiceField(
@@ -18,3 +18,7 @@ class UserRegisterationForm(UserCreationForm):
     class Meta:
         model=User
         fields=['first_name','last_name','profile_type','username','email', 'password1', 'password2']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'required': True}),
+            'last_name': forms.TextInput(attrs={'required': True}),
+        }
