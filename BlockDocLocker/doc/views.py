@@ -7,6 +7,10 @@ import json
 from django.urls import reverse
 from django.http import FileResponse, HttpResponse
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django_tables2 import SingleTableView
+from .tables import SimpleTable
+from django_tables2 import SingleTableView, Table
+
 
 import io
 import os
@@ -50,7 +54,8 @@ def about(request):
     return render(request,'doc/about.html')
 
 
-
+def checkRequests(request):
+    pass
 
 
 class FileFieldFormView(FormView):
@@ -67,18 +72,41 @@ class FileFieldFormView(FormView):
         else:
             return self.form_invalid(form)
 
-    def form_valid(self,request, form):
+    def form_valid(self,form, request): 
         files = form.cleaned_data["file_field"]
         context = {}
-        context["redirect"] = "/viewDocuments/"
-        context["web3method"] = "uploadDocuments"
+        context["redirect"] = "/documents/"
+        context["web3method"] = "uploadDocument"
         context["content"] = []
         for file in files:
             try:
                 print(file.name)
-                context["content"].append(upload(file))
+                # context["content"].append(upload(file))
+                context["content"] = ([['JS',2021,232,"Dafsadfasdfcafs",999999,"Sdafdsacsfgs",1,"0x9b7A93538D87fBBBA91b90aA46D2E28D5E5A772b"]])
             except Exception as e:
                 return HttpResponse(f"Error {e}")
         print(f"executed")
         
         return render(request, "doc/first.html", context = context)
+    
+    
+class SimpleTableView(SingleTableView):
+    table_class = SimpleTable
+    template_name = 'doc/my_list.html'
+    context_object_name = 'table_data'
+    
+    def get_queryset(self):
+        # Provide data for the table (replace with your data)
+        data = [
+            {'name': 'Item 1', 'description': 'Description 1'},
+            {'name': 'Item 2', 'description': 'Description 2'},
+            {'name': 'Item 3', 'description': 'Description 3'},
+        ]
+        return SimpleTable(data)
+    def get_table_data(self):
+        data =  [
+            {'name': 'Item 1', 'description': 'Description 1'},
+            {'name': 'Item 2', 'description': 'Description 2'},
+            {'name': 'Item 3', 'description': 'Description 3'},
+        ]
+        return SimpleTable(data)

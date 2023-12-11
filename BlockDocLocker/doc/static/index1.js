@@ -324,12 +324,11 @@ async function sendDataTransaction(methodName, ...args) {
         gasPrice: await w3.eth.getGasPrice(),
         'chainId': 1337,
     })
-
-  
+    return transaction
     console.log('Transaction Hash:', await transaction);
     } catch (error) {
-        
-        console.error(`Error calling ${methodName}:`, error.message);
+      console.log("Index.js")
+        return error.message
     }
     }
 
@@ -348,7 +347,8 @@ async function callContractFunction(methodName, ...args) {
         console.log(`${methodName} Result:::`, result);
         
     } catch (error) {
-        console.error(`Error calling ${methodName}:`, error.message);
+      return error.message
+        // console.error(`Error calling ${methodName}:`, error.message);
     }
   }
 

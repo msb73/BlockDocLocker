@@ -12,39 +12,80 @@
 <button id="sendDataButton">Send Data</button>
 
 <script>
-    
+    var error = ""
     document.getElementById('sendDataButton').addEventListener('click', function() {
-        // Your JSON data
         var web3method = "{{web3method}}";
-        var form = document.createElement('form');
-        form.method = 'post';
-        form.action = "{% url 'doc-about' %}".replace("/about/", "{{redirect}}");    
-        console.log(form.action)
-        // Submit the form
-        "{% if content %}"
-            var promise = methobj[web3method](web3method, "{{content}}")
-        "{%else%}"
-            var promise = methobj[web3method](web3method)
-        "{%endif%}"
         
-         promise.then(value => {
-            console.log('Resolved value:', value);
-            var jsonDataInput = document.createElement('input');
-            jsonDataInput.type = 'hidden';
-            jsonDataInput.name = 'data';
-            jsonDataInput.value =  JSON.stringify(value);
-            form.appendChild(jsonDataInput);
-            var csrfTokenInput = document.createElement('input');
-            csrfTokenInput.type = 'hidden';
-            csrfTokenInput.name = 'csrfmiddlewaretoken';
-            csrfTokenInput.value = '{{ csrf_token }}';
-            form.appendChild(csrfTokenInput);
-            document.body.appendChild(form);
-            form.submit();
+        if(methobj[web3method].name == "sendDataTransaction"){
+            var content = "{{content | safe}}";
+                content = content.replace(/'/g, '"');
+                content = JSON.parse(content);
+            var promise = methobj[web3method](web3method, (content));
+                promise.then(value => {
+                    
+                    alert(value);
+                }).catch((e) => {
+                    alert("rejected");
+                    error = e
+                    if(typeof(e) == String){
+                        {% comment %} var error = (JSON.parse(e.slice(25,)).message)
+                        console.log("Cathc1")
+                        console.error(error); // "oh, no!" {% endcomment %}
+                        console.log(e)
+                        alert(e);
+                        
+                    }
+                    else {
+                        console.log(e.message)
+                        alert(e.message);
+                    }   
+                    
+                  });
+                }
+        
+        else if(methobj[web3method].name == "callContractFunction"){
+            var form = document.createElement('form');
+            form.method = 'post';
+            form.action = "{% url 'doc-about' %}".replace("/about/", "{{redirect}}");
+            var promise = methobj[web3method](web3method)
+            promise.then(value => {
+                console.log('Resolved value:', value);
+                alert(value);
+                //jsonDatainput
+                    var jsonDataInput = document.createElement('input');
+                    jsonDataInput.type = 'hidden';
+                    jsonDataInput.name = 'data';
+                    jsonDataInput.value =  JSON.stringify(value);
+                form.appendChild(jsonDataInput);
+                //csrfTokenInput
+                    var csrfTokenInput = document.createElement('input');
+                    csrfTokenInput.type = 'hidden';
+                    csrfTokenInput.name = 'csrfmiddlewaretoken';
+                    csrfTokenInput.value = '{{ csrf_token }}';
+                form.appendChild(csrfTokenInput);
+                document.body.appendChild(form);
+                form.submit();
+                
+                // Continue with form submission or other actions
+            }).catch((e) => {
+                var error = (JSON.parse(e.slice(25,)).message)
+                console.error(error); // "oh, no!"
+                alert(error);
+              }); 
+        
+        // Parse the JSON string into a JavaScript object
             
-            // Continue with form submission or other actions
-        });
-    });
+            console.log(content);
+            console.log("true");
+            
+            console.log(typeof("{{content}}"));
+            console.log(promise);
+        alert('false');
+        
+    
+
+        }
+});
     </script>
 
 
