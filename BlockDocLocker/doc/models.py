@@ -11,3 +11,5 @@ class Post(models.Model):
     date_posted=models.DateTimeField(default= timezone.now)
 
 
+class DummyModel(models.Model):
+    pass

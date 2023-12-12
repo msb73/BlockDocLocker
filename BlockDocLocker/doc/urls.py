@@ -7,7 +7,7 @@ urlpatterns = [
     path('',views.first, name="doc-home"),
     path('about/', views.about, name='doc-about'),
     path('upload/', views.FileFieldFormView.as_view(), name='doc-upload'),
-    path('documents/', views.viewDocuments, name = "viewDocuments"),
-    path('my-table/', views.SimpleTableView.as_view(), name='my_table'),
+    path('documents/', views.ViewDocuments.as_view(), name = "viewDocuments"),
+    # path('my-table/', views.SimpleTableView.as_view(), name='my_table'),
 
     ]

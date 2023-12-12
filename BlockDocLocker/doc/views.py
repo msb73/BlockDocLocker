@@ -8,9 +8,11 @@ from django.urls import reverse
 from django.http import FileResponse, HttpResponse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django_tables2 import SingleTableView
-from .tables import SimpleTable
+# from .tables import SimpleTable
 from django_tables2 import SingleTableView, Table
-
+from django.utils.html import format_html
+from .tables import ViewTable  
+from .models import DummyModel
 
 import io
 import os
@@ -89,24 +91,37 @@ class FileFieldFormView(FormView):
         
         return render(request, "doc/first.html", context = context)
     
-    
-class SimpleTableView(SingleTableView):
-    table_class = SimpleTable
+
+
+class ViewDocuments(SingleTableView):
+    table_class = ViewTable
+    dat = {}
+
+    model = DummyModel
     template_name = 'doc/my_list.html'
-    context_object_name = 'table_data'
-    
-    def get_queryset(self):
-        # Provide data for the table (replace with your data)
-        data = [
-            {'name': 'Item 1', 'description': 'Description 1'},
-            {'name': 'Item 2', 'description': 'Description 2'},
-            {'name': 'Item 3', 'description': 'Description 3'},
-        ]
-        return SimpleTable(data)
     def get_table_data(self):
-        data =  [
-            {'name': 'Item 1', 'description': 'Description 1'},
-            {'name': 'Item 2', 'description': 'Description 2'},
-            {'name': 'Item 3', 'description': 'Description 3'},
-        ]
-        return SimpleTable(data)
+        print(ViewDocuments.dat)
+        # print(type()
+        print(type(ViewDocuments.dat))
+        return (ViewDocuments.dat)
+
+    def post(self,  request, *args, **kwargs):
+        # Access the form data using request.POST
+        self.dat = json.loads(request.POST.get("data"))
+        ls = []
+        for i in self.dat:
+            ls.append({
+                'name' : i[0],
+                'caseNo' : int(i[1]),
+                'documentId' : int(i[2]),
+			    'cid' : i[3],
+			    'timeStamp' : i[4],
+			    'documentHash' : format_html("<a herf = '{}' > Click </a>","https://ipfs.io/ipfs/"+ i[5]),
+			    'documentType' : i[6],
+            })
+        ViewDocuments.dat = ls
+        # Process the form data as needed
+        # print(self.data)
+        # Call the get method to update the table data
+        return self.get(request, *args, **kwargs)
+    
