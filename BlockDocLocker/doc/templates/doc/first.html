@@ -19,6 +19,8 @@
         if(methobj[web3method].name == "sendDataTransaction"){
             var content = "{{content | safe}}";
                 content = content.replace(/'/g, '"');
+                console.log(content);
+                error = content;
                 content = JSON.parse(content);
             var promise = methobj[web3method](web3method, (content));
                 promise.then(value => {

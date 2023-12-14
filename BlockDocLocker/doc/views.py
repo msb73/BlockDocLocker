@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from .models import Post
 from django.views.generic.edit import FormView
-from .form import FileFieldForm
+from .form import FileFieldForm, AddUsersForm
 from django.contrib import messages
 import json
 from django.urls import reverse
@@ -13,7 +13,7 @@ from django_tables2 import SingleTableView, Table
 from django.utils.html import format_html
 from .tables import ViewTable  
 from .models import DummyModel
-
+import magic
 import io
 import os
 import tempfile
@@ -38,15 +38,7 @@ def home(request):
     }
     return render(request, 'doc/home.html', context= {'transact' : json.dumps(transact) })
 
-def viewDocuments(request):
-    # data = request.POST.get("data")
-    print(request.POST.get("data"))
-    data = json.loads(request.POST.get("data"))
-    # data = request.POST.get("data")
-    print(type(data))
-    print(data[0][0])
-    print(json)
-    return render(request, 'doc/viewDocuments.html', context = {"datas" : data})
+
 
 
 
@@ -59,14 +51,13 @@ def about(request):
 def checkRequests(request):
     pass
 
-
-class FileFieldFormView(FormView):
-    form_class = FileFieldForm
-    template_name = "doc/upload.html"  # Replace with your template.
-    success_url = ""  # Replace with your URL or reverse().
-
+class AddUser(FormView):
+    form_class = AddUsersForm
+    template_name = "doc/upload.html"
+    success_url = ""
+    
+    
     def post(self, request, *args, **kwargs):
-        print('@@@@@@@@@@@@@@@##############################@@@@@@@@@@@@@@@@@@@')
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         if form.is_valid():
@@ -74,54 +65,94 @@ class FileFieldFormView(FormView):
         else:
             return self.form_invalid(form)
 
+class uploadDocuments(FormView):
+    form_class = FileFieldForm
+    template_name = "doc/upload.html"  # Replace with your template.
+    success_url = ""  # Replace with your URL or reverse().
+    
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+           return self.form_valid(form, request) 
+        else:
+            return self.form_invalid(form) 
+
     def form_valid(self,form, request): 
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        # print(request.POST) 
+        context = {"redirect" : "/documents/", "web3method" : "uploadDocument", "content" : []}
         files = form.cleaned_data["file_field"]
-        context = {}
-        context["redirect"] = "/documents/"
-        context["web3method"] = "uploadDocument"
-        context["content"] = []
-        for file in files:
+        print(files)
+        documentName = request.POST.getlist("documentName")
+        caseNo = request.POST.getlist("caseNo")
+        documentId = request.POST.getlist("documentId")
+        for index, file in enumerate(files): 
             try:
-                print(file.name)
-                # context["content"].append(upload(file))
-                context["content"] = ([['JS',2021,232,"Dafsadfasdfcafs",999999,"Sdafdsacsfgs",1,"0x9b7A93538D87fBBBA91b90aA46D2E28D5E5A772b"]])
+                doctype= file.content_type
+                cid = upload(file, "None")
+                context["content"].append([
+                    documentName[index], caseNo[index], documentId[index], cid, 0, "Document Hash", 1, "0x0000000000000000000000000000000000000000"
+                ])
             except Exception as e:
                 return HttpResponse(f"Error {e}")
+        print(f'{context["content"]=}')
         print(f"executed")
-        
-        return render(request, "doc/first.html", context = context)
+        # context["content"] = []
+        # context["content"] = [['JS',2021,232,"Dafsadfasdfcafs",999999,"Sdafdsacsfgs",1,"0x9b7A93538D87fBBBA91b90aA46D2E28D5E5A772b"]]
+            
+        return render(request, "doc/first.html", context = context) 
     
 
 
 class ViewDocuments(SingleTableView):
     table_class = ViewTable
-    dat = {}
-
+    data = []
     model = DummyModel
-    template_name = 'doc/my_list.html'
+    template_name = 'doc/viewDocuments.html'
     def get_table_data(self):
-        print(ViewDocuments.dat)
-        # print(type()
-        print(type(ViewDocuments.dat))
-        return (ViewDocuments.dat)
+        return (ViewDocuments.data)
 
     def post(self,  request, *args, **kwargs):
         # Access the form data using request.POST
-        self.dat = json.loads(request.POST.get("data"))
-        ls = []
-        for i in self.dat:
-            ls.append({
+        for i in json.loads(request.POST.get("data")):
+            ViewDocuments.data.append({
                 'name' : i[0],
                 'caseNo' : int(i[1]),
                 'documentId' : int(i[2]),
-			    'cid' : i[3],
+			    'cid' : format_html("<a href = '{}' target='_blank'> Click </a>","https://ipfs.io/ipfs/"+ i[3]),
 			    'timeStamp' : i[4],
-			    'documentHash' : format_html("<a herf = '{}' > Click </a>","https://ipfs.io/ipfs/"+ i[5]),
-			    'documentType' : i[6],
+			    'documentHash' : i[5],
+			    'documentType' : i[6], 
             })
-        ViewDocuments.dat = ls
         # Process the form data as needed
         # print(self.data)
         # Call the get method to update the table data
         return self.get(request, *args, **kwargs)
     
+
+# class CheckRequests(SingleTableView):
+#     table_class = ViewTable
+#     data = []
+
+#     model = DummyModel
+#     template_name = 'doc/my_list.html'
+#     def get_table_data(self):
+#         return (CheckRequests.data)
+
+#     def post(self,  request, *args, **kwargs):
+#         # Access the form data using request.POST
+#         for i in json.loads(request.POST.get("data")):
+#             CheckRequests.data.append({
+#                 'name' : i[0],
+#                 'caseNo' : int(i[1]),
+#                 'documentId' : int(i[2]),
+# 			    'cid' : i[3],
+# 			    'timeStamp' : i[4],
+# 			    'documentHash' : format_html("<a href = '{}' target='_blank'> Click </a>","https://ipfs.io/ipfs/"+ i[5]),
+# 			    'documentType' : i[6], 
+#             })
+#         # Process the form data as needed
+#         # print(self.dataa)
+#         # Call the get method to update the table data
+#         return self.get(request, *args, **kwargs)

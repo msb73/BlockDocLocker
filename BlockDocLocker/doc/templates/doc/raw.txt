@@ -1,10 +1,25 @@
-{code: 4001, message: 'MetaMask Tx Signature: User denied transaction signature.', stack: '{\n  "code": 4001,\n  "message": "MetaMask Tx Signat…hfbeogaeaoehlefnkodbefgpgknn/common-0.js:1:193619'}
-code
-: 
-4001
-message
-: 
-"MetaMask Tx Signature: User denied transaction signature."
-stack
-: 
-"{\n  \"code\": 4001,\n  \"message\": \"MetaMask Tx Signature: User denied transaction signature.\",\n  \"stack\": \"Error: MetaMask Tx Signature: User denied transaction signature.\\n    at new s (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/common-2.js:16:10961)\\n    at new r.EthereumProviderError (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/common-2.js:16:11476)\\n    at s (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/common-3.js:1:463)\\n    at Object.userRejectedRequest (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/common-3.js:1:1694)\\n    at M._processApproval (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/background-3.js:1:306207)\\n    at async Xe.newUnapprovedTransaction (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/background-4.js:1:383394)\\n    at async chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/background-0.js:7:37822\\n    at async chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/common-0.js:1:193619\"\n}\n  at new s (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/common-2.js:16:10961)\n  at new r.EthereumProviderError (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/common-2.js:16:11476)\n  at s (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/common-3.js:1:463)\n  at Object.userRejectedRequest (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/common-3.js:1:1694)\n  at M._processApproval (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/background-3.js:1:306207)\n  at async Xe.newUnapprovedTransaction (chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/background-4.js:1:383394)\n  at async chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/background-0.js:7:37822\n  at async chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/common-0.js:1:193619"}
+
+{% load crispy_forms_tags %}
+
+{%block content%}
+
+<div class="content-section">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Upload Document</legend>
+            {{form|crispy}}
+        </fieldset>
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Upload Document</legend>
+            
+            {{form|crispy}}
+        </fieldset> 
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Submit</button>
+        </div>
+    </form>
+    
+</div>
+{%endblock content%}
