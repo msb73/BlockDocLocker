@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        document.getElementById("submit").addEventListener('click', function(){
+            var caseid = document.getElementById("caseid");
+
+            fetch("{% url 'doc-home' %}", {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  // Additional headers if needed
+                  // 'Authorization': 'Bearer YourAccessToken'
+                },
+                body: caseid
+              })
+                .then(response => response.json())
+                .then(data => {
+                  // Handle the response data
+                  console.log(data);
+                })
+                .catch(error => {
+                  // Handle errors
+                  console.error('Error:', error);
+                });
+            
+        })
+    </script>
+</head>
+<body>
+    {% load crispy_forms_tags %}
+
+{%block content%}
+
+<div class="content-section">
+    <form method="GET" enctype="multipart/form-data">
+        <input type="text" name="caseid" id="caseid" placeholder="Enter CaseId">
+        <input type="submit" value="Submit" id = "submit">
+    </form>
+    
+</div>
+{% load render_table from django_tables2 %}
+
+
+  {% render_table table %}
+{%endblock content%}
+</body>
+</html>

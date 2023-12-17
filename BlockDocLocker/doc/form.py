@@ -33,22 +33,24 @@ class FileFieldForm(forms.Form):
     documentName = forms.CharField(widget= forms.TextInput)
     caseNo = forms.CharField(widget= forms.NumberInput)
     documentId = forms.CharField(widget= forms.NumberInput)
-    # timeStamp = forms.CharField(widget= forms.NumberInput({"value" : 0, "hidden" : "on"})) 
     # documentType = forms.ChoiceField(choices=  (
     #     ("Audio", "Audio" ),
     #     ("Video", "Video" ),
     #     ("Document", "Document")
     # )  ) 
     file_field = MultipleFileField()
-    description = forms.CharField(widget=forms.Textarea)
+    description = forms.CharField(widget=forms.Textarea({"height" : "30px"}))  
     
     
 class AddUsersForm(forms.Form):
     userId = forms.CharField(widget= forms.TextInput, max_length=42, min_length=42)
+    username = forms.CharField(widget=forms.TextInput, max_length=12, min_length=5)
+    deptNumber = forms.CharField(widget= forms.NumberInput)
     userType = forms.ChoiceField(choices=  (
         (1, "ISSUER" ),
         (2, "USER" )
     )  ) 
-    username = forms.CharField(widget=forms.TextInput, max_length=12, min_length=5)
-    deptNumber = forms.CharField(widget= forms.NumberInput)
-    
+
+
+class SendRequestsForm(forms.Form):
+        userId = forms.CharField(widget= forms.TextInput)

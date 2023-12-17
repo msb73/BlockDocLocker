@@ -1,23 +1,21 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from .models import Post
 from django.views.generic.edit import FormView
-from .form import FileFieldForm, AddUsersForm
+from .form import FileFieldForm, AddUsersForm, SendRequestsForm
 from django.contrib import messages
 import json
 from django.urls import reverse
 from django.http import FileResponse, HttpResponse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django_tables2 import SingleTableView
-# from .tables import SimpleTable
-from django_tables2 import SingleTableView, Table
 from django.utils.html import format_html
 from .tables import ViewTable  
 from .models import DummyModel
-import magic
 import io
 import os
 import tempfile
 from .ipfs import upload, retrive
+import datetime as dt
 
 # Create your views here.
 def first(request):
@@ -80,7 +78,6 @@ class uploadDocuments(FormView):
 
     def form_valid(self,form, request): 
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        # print(request.POST) 
         context = {"redirect" : "/documents/", "web3method" : "uploadDocument", "content" : []}
         files = form.cleaned_data["file_field"]
         print(files)
@@ -103,8 +100,32 @@ class uploadDocuments(FormView):
             
         return render(request, "doc/first.html", context = context) 
     
-
-
+class AddUser(FormView):
+    template_name = "doc/upload.html"
+    form_class = AddUsersForm
+    success_url = ""
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+           return self.form_valid(form, request)  
+        else:
+            return self.form_invalid(form) 
+        
+        
+    def form_valid(self, form, request):
+        username = request.POST.getlist("userId")
+        userId = request.POST.getlist("username")
+        deptNumber = request.POST.getlist("deptNumber")
+        userType = request.POST.getlist("userType")
+        context = {"redirect" : "/documents/", "web3method" : "addUsers", "content" : []}
+        for i in range(len(username)):
+            context["content"].append([
+                userId[i], userType[i], username[i], deptNumber, True
+            ])
+        return render(request, "doc/first.html", context = context) 
+    
+    
 class ViewDocuments(SingleTableView):
     table_class = ViewTable
     data = []
@@ -121,20 +142,40 @@ class ViewDocuments(SingleTableView):
                 'caseNo' : int(i[1]),
                 'documentId' : int(i[2]),
 			    'cid' : format_html("<a href = '{}' target='_blank'> Click </a>","https://ipfs.io/ipfs/"+ i[3]),
-			    'timeStamp' : i[4],
+			    'timeStamp' : dt.datetime.fromtimestamp((int)(i[4])),
 			    'documentHash' : i[5],
 			    'documentType' : i[6], 
             })
+        print(request)
         # Process the form data as needed
         # print(self.data)
         # Call the get method to update the table data
         return self.get(request, *args, **kwargs)
-    
 
-# class CheckRequests(SingleTableView):
-#     table_class = ViewTable
-#     data = []
+# sendRequests
+# checkRequests
+# approveRequests
 
+
+class CheckRequests(SingleTableView):
+    table_class = ViewTable
+    model = DummyModel
+    template_name = 'doc/checkRequest.html'
+    data = [{"name" : "sFAGAR   "}] 
+    def get_table_data(self):
+        print("get_Table called")
+        return CheckRequests.data
+    def get(self, request, *args, **kwargs): 
+        if request.GET.get("caseid"):
+            CheckRequests.data = [{"name" : 123}]
+            
+        print('Hello')
+        return super().get(request, *args, **kwargs)
+    # def get
+    # def get(self, request, *args, **kwargs):
+    #     sort_param = request.GET.get('sort')
+    #     return self.post(request)   
+    # template_name = 
 #     model = DummyModel
 #     template_name = 'doc/my_list.html'
 #     def get_table_data(self):
