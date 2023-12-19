@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from .models import Post
 from django.views.generic.edit import FormView
-from .form import FileFieldForm, AddUsersForm, SendRequestsForm
+from .form import FileFieldForm, AddUsersForm,  DocumentSelectionForm
 from django.contrib import messages
 import json
 from django.urls import reverse
@@ -26,8 +26,16 @@ def first(request):
     else :
         context = {"web3method" : "viewDocuments",
                    "redirect" : reverse("viewDocuments")}
+        
+        
+    if request.method == "GET":
+        print("get called")
+        print(request.GET.get("requests"))
+        if (request.GET.get("requests")):
+            context = {"web3method" : "checkRequests",
+               "redirect" : reverse("checkRequests")}
+    # if request.method == "GET":
     return render(request, "doc/first.html", context = context)
- 
 def home(request):
     
     transact ={
@@ -155,44 +163,28 @@ class ViewDocuments(SingleTableView):
 # sendRequests
 # checkRequests
 # approveRequests
-
-
-class CheckRequests(SingleTableView):
-    table_class = ViewTable
-    model = DummyModel
+class DocumentSelectionView(FormView):
     template_name = 'doc/checkRequest.html'
-    data = [{"name" : "sFAGAR   "}] 
-    def get_table_data(self):
-        print("get_Table called")
-        return CheckRequests.data
-    def get(self, request, *args, **kwargs): 
-        if request.GET.get("caseid"):
-            CheckRequests.data = [{"name" : 123}]
-            
-        print('Hello')
-        return super().get(request, *args, **kwargs)
-    # def get
-    # def get(self, request, *args, **kwargs):
-    #     sort_param = request.GET.get('sort')
-    #     return self.post(request)   
-    # template_name = 
-#     model = DummyModel
-#     template_name = 'doc/my_list.html'
-#     def get_table_data(self):
-#         return (CheckRequests.data)
+    form_class = DocumentSelectionForm
+    success_url = '/success/'  # Update with your success URL
 
-#     def post(self,  request, *args, **kwargs):
-#         # Access the form data using request.POST
-#         for i in json.loads(request.POST.get("data")):
-#             CheckRequests.data.append({
-#                 'name' : i[0],
-#                 'caseNo' : int(i[1]),
-#                 'documentId' : int(i[2]),
-# 			    'cid' : i[3],
-# 			    'timeStamp' : i[4],
-# 			    'documentHash' : format_html("<a href = '{}' target='_blank'> Click </a>","https://ipfs.io/ipfs/"+ i[5]),
-# 			    'documentType' : i[6], 
-#             })
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        
+        # Dummy data (replace this with your actual data)
+        case_data = {
+        'case1': [{'documentId': 'doc1', 'issuer': 'Issuer1'}, {'documentId': 'doc2', 'issuer': 'Issuer2'}],
+        'case2': [{'documentId': 'doc3', 'issuer': 'Issuer3'}, {'documentId': 'doc4', 'issuer': 'Issuer4'}],
+    }
+ 
+        kwargs['case_data'] = case_data
+        return kwargs
+
+    def form_valid(self, form):
+        # Process the selected data
+        selected_data = form.cleaned_data
+        # Your logic here
+        return super().form_valid(form)
 #         # Process the form data as needed
 #         # print(self.dataa)
 #         # Call the get method to update the table data

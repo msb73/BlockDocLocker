@@ -1,5 +1,5 @@
 from django import forms
-
+from django.utils.html import format_html
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -52,5 +52,15 @@ class AddUsersForm(forms.Form):
     )  ) 
 
 
-class SendRequestsForm(forms.Form):
-        userId = forms.CharField(widget= forms.TextInput)
+class DocumentSelectionForm(forms.Form):
+    def __init__(self, case_data, *args, **kwargs):
+        super(DocumentSelectionForm, self).__init__(*args, **kwargs)
+
+        # Iterate through case data to dynamically create form fields
+        for case_id, documents in case_data.items():
+            # Add a field for each caseId
+            case_field_name = f'case_{case_id}'
+            self.fields[case_field_name] = forms.MultipleChoiceField(
+                choices=[(doc['documentId'],f"{doc['documentId']}  |  {doc['issuer']}") for doc in documents],
+                widget=forms.CheckboxSelectMultiple(attrs={'class': 'document-checkbox'})
+            )
