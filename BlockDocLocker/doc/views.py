@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from .models import Post
 from django.views.generic.edit import FormView
@@ -19,25 +20,17 @@ import datetime as dt
 
 # Create your views here.
 def first(request):
-    if request.method == "POST":
-        web3method = request.POST.get("web3method")
-        context = {"web3method" : request.POST.get("web3method"),
-               "redirect" : reverse(web3method)}
-    else :
-        context = {"web3method" : "viewDocuments",
-                   "redirect" : reverse("viewDocuments")}
-        
-        
+    context = {"web3method" : None,
+                   "redirect" : None}
     if request.method == "GET":
-        print("get called")
-        print(request.GET.get("requests"))
-        if (request.GET.get("requests")):
-            context = {"web3method" : "checkRequests",
-               "redirect" : reverse("checkRequests")}
-    # if request.method == "GET":
+        if request.GET.get("meth"):
+            print("get called")
+            context = {"web3method" : request.GET.get("meth"),
+                   "redirect" : reverse(request.GET.get("meth"))}
+            print(context["redirect"])
     return render(request, "doc/first.html", context = context)
 def home(request):
-    
+     
     transact ={
         "function" : "viewDocuments",
         'data' : None
@@ -57,19 +50,7 @@ def about(request):
 def checkRequests(request):
     pass
 
-class AddUser(FormView):
-    form_class = AddUsersForm
-    template_name = "doc/upload.html"
-    success_url = ""
-    
-    
-    def post(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        if form.is_valid():
-           return self.form_valid(form, request)
-        else:
-            return self.form_invalid(form)
+
 
 class uploadDocuments(FormView):
     form_class = FileFieldForm
@@ -86,7 +67,7 @@ class uploadDocuments(FormView):
 
     def form_valid(self,form, request): 
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        context = {"redirect" : "/documents/", "web3method" : "uploadDocument", "content" : []}
+        context = {"web3method" : "uploadDocument", "content" : []}
         files = form.cleaned_data["file_field"]
         print(files)
         documentName = request.POST.getlist("documentName")
@@ -95,9 +76,9 @@ class uploadDocuments(FormView):
         for index, file in enumerate(files): 
             try:
                 doctype= file.content_type
-                cid = upload(file, "None")
+                # cid = upload(file, "None")
                 context["content"].append([
-                    documentName[index], caseNo[index], documentId[index], cid, 0, "Document Hash", 1, "0x0000000000000000000000000000000000000000"
+                    documentName[index], caseNo[index], documentId[index], "cid", 0, "Document Hash", 1, "0x0000000000000000000000000000000000000000"
                 ])
             except Exception as e:
                 return HttpResponse(f"Error {e}")
@@ -105,7 +86,6 @@ class uploadDocuments(FormView):
         print(f"executed")
         # context["content"] = []
         # context["content"] = [['JS',2021,232,"Dafsadfasdfcafs",999999,"Sdafdsacsfgs",1,"0x9b7A93538D87fBBBA91b90aA46D2E28D5E5A772b"]]
-            
         return render(request, "doc/first.html", context = context) 
     
 class AddUser(FormView):
@@ -126,7 +106,7 @@ class AddUser(FormView):
         userId = request.POST.getlist("username")
         deptNumber = request.POST.getlist("deptNumber")
         userType = request.POST.getlist("userType")
-        context = {"redirect" : "/documents/", "web3method" : "addUsers", "content" : []}
+        context = {"web3method" : "addUsers", "content" : []}
         for i in range(len(username)):
             context["content"].append([
                 userId[i], userType[i], username[i], deptNumber, True
@@ -136,16 +116,14 @@ class AddUser(FormView):
     
 class ViewDocuments(SingleTableView):
     table_class = ViewTable
-    data = []
+    table_data = []
     model = DummyModel
     template_name = 'doc/viewDocuments.html'
-    def get_table_data(self):
-        return (ViewDocuments.data)
 
+            
     def post(self,  request, *args, **kwargs):
-        # Access the form data using request.POST
         for i in json.loads(request.POST.get("data")):
-            ViewDocuments.data.append({
+            self.table_data.append({
                 'name' : i[0],
                 'caseNo' : int(i[1]),
                 'documentId' : int(i[2]),
@@ -155,37 +133,52 @@ class ViewDocuments(SingleTableView):
 			    'documentType' : i[6], 
             })
         print(request)
-        # Process the form data as needed
-        # print(self.data)
-        # Call the get method to update the table data
         return self.get(request, *args, **kwargs)
 
-# sendRequests
-# checkRequests
+
 # approveRequests
-class DocumentSelectionView(FormView):
+class CSRequestView(FormView):
     template_name = 'doc/checkRequest.html'
     form_class = DocumentSelectionForm
-    success_url = '/success/'  # Update with your success URL
-
-    def get_form_kwargs(self):
+    success_url = ''  
+    def get_form_kwargs(self, case_data = {}):
         kwargs = super().get_form_kwargs()
-        
-        # Dummy data (replace this with your actual data)
-        case_data = {
-        'case1': [{'documentId': 'doc1', 'issuer': 'Issuer1'}, {'documentId': 'doc2', 'issuer': 'Issuer2'}],
-        'case2': [{'documentId': 'doc3', 'issuer': 'Issuer3'}, {'documentId': 'doc4', 'issuer': 'Issuer4'}],
-    }
- 
         kwargs['case_data'] = case_data
         return kwargs
+    
+    def post(self, request, *args, **kwargs):
+        if request.POST.get("data"):
+            # context = request.POST.getlist("data")
+            print("post called")
+            data = {}
+            for i in json.loads(request.POST.get("data")):
+                if data[i["Caseid"]]:
+                    data[i["Caseid"]].append({ "documentId" : i["documentId"] , "issuer" : i["issuer"] })
+                else:
+                    data[i["caseid"]] = [{ "documentId" : i["documentId"] , "issuer" : i["issuer"] }]
+               
+            # case_data = {
+            #     'case1': [{'documentId': 'doc1', 'issuer': 'Issuer1'}, {'documentId': 'doc2', 'issuer': 'Issuer2'}],
+            #     'case2': [{'documentId': 'doc3', 'issuer': 'Issuer3'}, {'documentId': 'doc4', 'issuer': 'Issuer4'}],
+            # }
+            kwargs = self.get_form_kwargs(case_data=case_data)
+            form = DocumentSelectionForm(**kwargs)
+            return render(request, self.template_name, {'form': form})
+            
+        form = self.get_form(self.get_form_class())
+        if form.is_valid():
+           return self.form_valid(request) 
+        else:
+            return self.form_invalid(form) 
+    def form_valid(self, request):
+        print("form valid called")
+        form = request.POST
+        context = {"web3method" : "sendRequest", "content" : []}
+        ls = form.lists()
+        next(ls)
+        for i in ls:
+            print(i)
+            context["content"].extend(i[1])
+        print(context)
+        return render(request, "doc/first.html", context = context)
 
-    def form_valid(self, form):
-        # Process the selected data
-        selected_data = form.cleaned_data
-        # Your logic here
-        return super().form_valid(form)
-#         # Process the form data as needed
-#         # print(self.dataa)
-#         # Call the get method to update the table data
-#         return self.get(request, *args, **kwargs)

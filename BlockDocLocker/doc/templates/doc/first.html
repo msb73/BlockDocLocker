@@ -10,10 +10,16 @@
         {{web3method}}
         <!-- Your template HTML -->
 <button id="sendDataButton">Send Data</button>
+<a href="/?meth=viewDocuments">view Docs</a>
+<a href="uploadDocument/">upload Docs</a>
+<a href="/?meth=viewDocuments">checkRequests</a>
+
+
 
 <script>
     var error = ""
     document.getElementById('sendDataButton').addEventListener('click', function() {
+
         var web3method = "{{web3method}}";
         
         if(methobj[web3method].name == "sendDataTransaction"){
@@ -57,6 +63,7 @@
                     var jsonDataInput = document.createElement('input');
                     jsonDataInput.type = 'hidden';
                     jsonDataInput.name = 'data';
+                    jsonDataInput.setAttribute('form_submission', 'true');
                     jsonDataInput.value =  JSON.stringify(value);
                 form.appendChild(jsonDataInput);
                 //csrfTokenInput

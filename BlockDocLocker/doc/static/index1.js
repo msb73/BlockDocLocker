@@ -11,7 +11,8 @@ const methobj = {
 }
 // Because init process of the MetaMaskSDK is async.
 setTimeout(() => {
-    const ethereum = MMSDK.getProvider(); // You can also access via window.ethereum
+    if(!ethereum.isConnected()){
+    const ethereum = MMSDK.getProvider();} // You can also access via window.ethereum
 }, 0);
 
 const accounts = ethereum.request({ method: 'eth_requestAccounts' });

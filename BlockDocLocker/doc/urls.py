@@ -6,11 +6,11 @@ from . import views
 urlpatterns = [
     path('',views.first, name="doc-home"),
     path('about/', views.about, name='doc-about'),
-    path('upload/', views.uploadDocuments.as_view(), name='doc-upload'),
+    path('uploadDocument/', views.uploadDocuments.as_view(), name='uploadDocument'),
     path('documents/', views.ViewDocuments.as_view(), name = "viewDocuments"),
     # path('my-table/', views.SimpleTableView.as_view(), name='my_table'),
     path('addusers/', views.AddUser.as_view(), name = "addUsers"),
     # path('requests', views.CheckRequests.as_view(), name = "checkRequests")
-    path('document-selection/', views.DocumentSelectionView.as_view(), name='document_selection'),
+    path('checkRequests/', views.CSRequestView.as_view(), name='checkRequests'),
 
     ]
