@@ -317,8 +317,6 @@ async function sendDataTransaction(methodName, ...args) {
     // Use the 'send' function for transactions 
     
     try{
-      console.log("sdafsdfasf");
-      console.log(length(...args));
     if (length(...args) > 0){
     const transaction =  contract.methods[methodName]( ...args).send({
         from: account,

@@ -8,15 +8,18 @@
     </head>
     <body>
         {{web3method}}
-        <!-- Your template HTML -->
-<button id="sendDataButton">Send Data</button>
-<a href="/?meth=viewDocuments">view Docs</a>
-<a href="uploadDocument/">upload Docs</a>
-<a href="/?meth=viewDocuments">checkRequests</a>
+<button id="sendDataButton" >Send Data</button>
 
 
 
 <script>
+    function raise(data){
+                var button = document.getElementById("sendDataButton");
+                    button.remove();
+                    var text = document.createElement("h2");
+                    text.textContent = data;
+                    document.body.appendChild(text);
+    }
     var error = ""
     document.getElementById('sendDataButton').addEventListener('click', function() {
 
@@ -30,16 +33,16 @@
                 content = JSON.parse(content);
             var promise = methobj[web3method](web3method, (content));
                 promise.then(value => {
-                    
-                    alert(value);
+                    raise("Document uploaded Successfully");
                 }).catch((e) => {
                     alert("rejected");
-                    error = e
+                    error = e;
+                    raise("Document not uploaded all changes revoked");
                     if(typeof(e) == String){
                         {% comment %} var error = (JSON.parse(e.slice(25,)).message)
                         console.log("Cathc1")
                         console.error(error); // "oh, no!" {% endcomment %}
-                        console.log(e)
+                        console.log(e);
                         alert(e);
                         
                     }
@@ -54,11 +57,10 @@
         else if(methobj[web3method].name == "callContractFunction"){
             var form = document.createElement('form');
             form.method = 'post';
-            form.action = "{% url 'doc-about' %}".replace("/about/", "{{redirect}}");
+            form.action =  "{{redirect}}";
             var promise = methobj[web3method](web3method)
             promise.then(value => {
                 console.log('Resolved value:', value);
-                alert(value);
                 //jsonDatainput
                     var jsonDataInput = document.createElement('input');
                     jsonDataInput.type = 'hidden';
@@ -71,25 +73,23 @@
                     csrfTokenInput.type = 'hidden';
                     csrfTokenInput.name = 'csrfmiddlewaretoken';
                     csrfTokenInput.value = '{{ csrf_token }}';
+                //method
+                    var method = document.createElement('input');
+                    method.type = 'hidden';
+                    method.name = 'method';
+                    method.value = web3method;
                 form.appendChild(csrfTokenInput);
                 document.body.appendChild(form);
                 form.submit();
                 
                 // Continue with form submission or other actions
             }).catch((e) => {
+                raise("Error occured" + e.message)
                 var error = (JSON.parse(e.slice(25,)).message)
                 console.error(error); // "oh, no!"
                 alert(error);
               }); 
         
-        // Parse the JSON string into a JavaScript object
-            
-            console.log(content);
-            console.log("true");
-            
-            console.log(typeof("{{content}}"));
-            console.log(promise);
-        alert('false');
         
     
 

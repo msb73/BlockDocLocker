@@ -326,9 +326,7 @@ async function sendDataTransaction(methodName, ...args) {
         'chainId': 1337,
     })
     return transaction
-    console.log('Transaction Hash:', await transaction);
     } catch (error) {
-      console.log("Index.js")
         return error.message
     }
     }
