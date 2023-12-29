@@ -19,4 +19,10 @@ class ViewTable(tables.Table):
     documentType = tables.Column()
 
 # table = PersonTable(data)
-
+class RequestTable(tables.Table):
+    documentId = tables.Column()
+    documentName = tables.Column()
+    issuerName = tables.Column()
+    timestamp = tables.Column()
+    AskedTime = tables.Column()
+    CheckBox = tables.Column()

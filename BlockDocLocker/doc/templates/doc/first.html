@@ -1,8 +1,10 @@
 <html>
     {% load static %}
     <head>
-        <script src="https://c0f4f41c-2f55-4863-921b-sdk-docs.github.io/cdn/metamask-sdk.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/web3@1.3.6/dist/web3.min.js"></script>
+         <script src="https://c0f4f41c-2f55-4863-921b-sdk-docs.github.io/cdn/metamask-sdk.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/web3@1.3.6/dist/web3.min.js"></script> 
+         {% comment %} <script src="{% static 'metamask-sdk.js' %}"></script>
+        <script src="{% static 'web3-min.js' %}"></script> {% endcomment %} 
         <script src="{% static 'index1.js' %}"></script>
 
     </head>
@@ -33,7 +35,7 @@
                 content = JSON.parse(content);
             var promise = methobj[web3method](web3method, (content));
                 promise.then(value => {
-                    raise("Document uploaded Successfully");
+                    raise(web3method + " Successfully");
                 }).catch((e) => {
                     alert("rejected");
                     error = e;
@@ -73,6 +75,7 @@
                     csrfTokenInput.type = 'hidden';
                     csrfTokenInput.name = 'csrfmiddlewaretoken';
                     csrfTokenInput.value = '{{ csrf_token }}';
+                    
                 //method
                     var method = document.createElement('input');
                     method.type = 'hidden';

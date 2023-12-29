@@ -10,6 +10,10 @@ urlpatterns = [
     path('documents/', views.ViewDocuments.as_view(), name = "viewDocuments"),
     path('addUsers/', views.AddUser.as_view(), name = "addUsers"),
     path('checkRequests/', views.CSARequestView.as_view(), name='checkRequests'),
+    path('checkRequests/', views.CSARequestView.as_view(), name='allDocuments'),
     path('approveRequests/', views.CSARequestView.as_view(), name='checkRequests'),
+    path('checkRequests/', views.CSARequestView.as_view(), name='checkApprovals'),
+    path('Requests/', views.Requests.as_view(), name='checkApprovals'),
+    
 
     ]

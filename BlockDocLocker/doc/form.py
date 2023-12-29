@@ -51,7 +51,6 @@ class AddUsersForm(forms.Form):
         (2, "USER" )
     )  ) 
 
-
 class DocumentSelectionForm(forms.Form):
     def __init__(self, case_data, *args, **kwargs):
         super(DocumentSelectionForm, self).__init__(*args, **kwargs)
@@ -64,3 +63,4 @@ class DocumentSelectionForm(forms.Form):
                 choices=[(doc['documentId'],f"{doc['documentId']}  |  {doc['issuer']}") for doc in documents],
                 widget=forms.CheckboxSelectMultiple(attrs={'class': 'document-checkbox'})
             )
+            
