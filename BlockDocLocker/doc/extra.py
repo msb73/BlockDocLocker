@@ -1,9 +1,9 @@
 import json
-import datetime as dt
+from datetime import datetime as dt
 from django.utils.html import format_html
 from .names import *
 from .tables import ViewTable 
-from datetime import datetime, timedelta
+
 
 from django.urls import reverse
 # table View
@@ -30,23 +30,24 @@ class Mapping:
                         tableViewDocs[1] : int(i[1]),
                         tableViewDocs[2] : int(i[2]),
     		    	    tableViewDocs[3] : format_html("<a href = '{}' target='_blank'> Click </a>","https://ipfs.io/ipfs/"+ i[3]),
-    		    	    tableViewDocs[4] : dt.datetime.fromtimestamp((int)(i[4])),
+    		    	    tableViewDocs[4] : dt.fromtimestamp((int)(i[4])),
     		    	    tableViewDocs[5] : i[6], 
                     })
         return (ls )
     
     # for table View form
-    def down_check_approvals(self, data : str) -> list[dict]:
+    def down_check_approvals(data : str) -> list[dict]:
         ls = []
         for i in json.loads(data):
             ls.append({
-                "documentId" : i[3], 
-                "documentName" :i[4], 
-                "issuerName" : i[2],
-                "timestamp" :dt.datetime.fromtimestamp((int)(i[5])) , 
-                "AskedTime" : dt.datetime.fromtimestamp((int)(i[6])),
+                tableCheckApprovals[0] : i[3], 
+                tableCheckApprovals[1] :i[4], 
+                tableCheckApprovals[2] : i[2],
+                tableCheckApprovals[3] :dt.fromtimestamp((int)(i[5])) , 
+                tableCheckApprovals[4] : dt.fromtimestamp((int)(i[6])),
 	            "CheckBox" : format_html(f"<input type='checkbox' id='option{i[0]}' name='selected_options' value='{i[0]}' onclick='updateSessionStorage(this)'> "), 
                     })
+        return ls
 
     # for 2 drop down
     def down_all_cases(self, dic) -> (list[tuple], list[tuple]):
@@ -100,20 +101,36 @@ class Mapping:
                 "documentId" : data["0"][i]
             })
             
-  
+
 class UPMapping:
-    def get_context(context):
+    @classmethod
+    def get_context(cls, context, func = None, data = None):
         return {"web3method" : context,
-                   "content" : None}
+                   "content" : func(data = data)}
               
     def up_approve_requests(data):
         return json.loads(data)
     
     def up_send_requests(data):
-        data = json.loads(data)
-        ids = len(data) -2
+        print("called")
+        dic = data.copy()
+        # ids = len(data) -2
         # for i in range(ids):
-        dates = data.pop("data")
+        ls = [[], []]
+        dic.pop("csrfmiddlewaretoken") 
+        dates = iter(dic.pop("dates"))
+        for key in dic.keys():
+            for documentId in dic.getlist(key):
+                print(documentId)
+                ls[0].append(int(documentId))
+                ls[1].append( int(dt.timestamp(dt.strptime(next(dates), "%Y-%H-%d"))) )
+                              
+        return ls    
+            
+        # print(dates)
+        # [('csrfmiddlewaretoken', 'kbmaZP3Gsoin2bxWAw3e6JEF7WUPo4uUr7lNt257tXYOzeNTF8kT2IGj9OJqKV9n'), ('case_10100', '101000000003'), ('dates', '2024-01-13'), ('case_10200', '102000000001')]
+        # print(list(data.items()))
+            
         
     
     def up_add_users(self, data):

@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django_tables2 import SingleTableView
 from django.utils.html import format_html
-from .tables import ViewTable  , CheckRequestsTable
+from .tables import ViewTable  , CheckRequestsTable, CheckApprovalsTable
 from .models import DummyModel
 from .ipfs import upload
 from .extra import Mapping, UPMapping
@@ -91,7 +91,7 @@ class ViewDocuments(SingleTableView):
     table_class, table_data, template_name = ViewTable, [], 'doc/viewDocuments.html'
     model = DummyModel
     def get(self, request, *args, **kwargs):
-        return Get.get(self, request, *args, **kwargs)
+        # return super().get(self, request, *args, **kwargs)
         if request.GET.get("meth"):
             return render(request, "doc/first.html", context = Mapping.get_context(context = request.GET.get("meth")))
         return super().get(self, request, *args, **kwargs) 
@@ -124,25 +124,23 @@ class SendRequestView(FormView):
             form = self.form_class(**kwargs)
             date = str((datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d"))
             return render(request, self.template_name, {'form': form, "date" : date })
-        if "dates" in request.POST:    
+        if request.POST:    
             form = self.get_form(self.get_form_class()) 
-            for i, j in  request.POST.items():
-                print(request.POST.getlist(i))
+            
+            
+            # print(list(request.POST.items()))
+            # for i, j in  request.POST.items():
+                
+            #     print(request.POST.getlist(i))
             if form.is_valid():
-                return form_valid(request) 
+                return self.form_valid(request) 
             else:
                 return self.form_invalid(form) 
                 
-        def form_valid(request):
-            # if checkRequest gives approveRequests
-            if request.POST.get("method") == "checkRequests":
-                context = {"web3method" : "approveRequests", "content" : []}
-            else:
-                context = {"web3method" : "sendRequests", "content" : []} 
-            next(ls)
-            ls = form.lists()
-            context["content"] = [i for j in ls for i in j]
-            return render(request, "doc/first.html", context = context)
+    def form_valid(self, request):
+        context = UPMapping.get_context("sendRequests", func = UPMapping.up_send_requests, data = request.POST)
+        print(context["content"]) 
+        return render(request, "doc/first.html", context = context)
 
 
 
@@ -151,7 +149,7 @@ def removeUsers(request):
 
 class ApproveRequests(SingleTableView): 
     table_data = []
-    table_class = CheckRequestsTable
+    table_class = CheckApprovalsTable
     model = DummyModel
     template_name = 'doc/viewDocuments.html'
     
@@ -162,12 +160,13 @@ class ApproveRequests(SingleTableView):
         return super().get(self, request, *args, **kwargs)
     
     def post(self,  request, *args, **kwargs):
-        if "data" in request.POST: 
+        if "data" in request.POST:
             ApproveRequests.table_data = Mapping.down_check_approvals(data = request.POST.get("data"))
         if "selected_options" in request.POST:
             context = {"web3method" : "approveRequests", 
                 "content" : UPMapping.up_approve_requests(data = request.POST.getlist("selected_options"))}
             return render(request, "doc/first.html", context = context)
+        
         return self.get(request, *args, **kwargs)
     
     

@@ -19,6 +19,7 @@ class ViewTable(tables.Table):
 class CheckApprovalsTable(tables.Table):
     for i in tableCheckApprovals:
         locals()[i] = tables.Column()
+        CheckBox = tables.Column()
 
 class CheckRequestsTable(tables.Table):
     for i in tableCheckRequests:
