@@ -9,20 +9,21 @@ import django_tables2 as tables
 #     {"name": "Bradley"},
 #     {"name": "Stevi"}, = 
 # ]
-class ViewTable(tables.Table):
-    name = tables.Column()
-    caseNo = tables.Column()
-    documentId = tables.Column()
-    cid = tables.Column()
-    timeStamp = tables.Column()
-    documentHash = tables.Column()
-    documentType = tables.Column()
+from .names import *
 
+class ViewTable(tables.Table):
+    for i in tableViewDocs: 
+        locals()[i] = tables.Column()
+        
 # table = PersonTable(data)
-class RequestTable(tables.Table):
-    documentId = tables.Column()
-    documentName = tables.Column()
-    issuerName = tables.Column()
-    timestamp = tables.Column()
-    AskedTime = tables.Column()
-    CheckBox = tables.Column()
+class CheckApprovalsTable(tables.Table):
+    for i in tableCheckApprovals:
+        locals()[i] = tables.Column()
+
+class CheckRequestsTable(tables.Table):
+    for i in tableCheckRequests:
+        locals()[i] = tables.Column()
+    
+class AllUsers(tables.Table): 
+    for i in tableAllUsers:
+        locals()[i] = tables.Column()

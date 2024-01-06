@@ -1,0 +1,5 @@
+tableViewDocs = ("name", "caseNo", "documentId", "cid", "timeStamp", "documentType")
+tableCheckApprovals = ("documentId", "documentName", "issuerName", "timestamp", "AskedTime")
+tableCheckRequests = ("documentId", "documentName")
+tableAllUsers = ("userIds" , "userNames")
+formCheckRequests = ("documentId", "name")

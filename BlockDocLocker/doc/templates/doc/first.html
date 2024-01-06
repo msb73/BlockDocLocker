@@ -33,9 +33,10 @@
                 console.log(content);
                 error = content;
                 content = JSON.parse(content);
-            var promise = methobj[web3method](web3method, (content));
-                promise.then(value => {
-                    raise(web3method + " Successfully");
+                var promise = methobj[web3method](web3method, (content));
+                promise.then(value => {  
+                    console.log(value);
+                    raise(value);
                 }).catch((e) => {
                     alert("rejected");
                     error = e;

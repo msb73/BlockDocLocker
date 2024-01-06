@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "crispy_bootstrap4",
     "bootstrap4",
     "django_tables2",
+    "django_select2",
+    "django_filters"
 ]
 
 MIDDLEWARE = [

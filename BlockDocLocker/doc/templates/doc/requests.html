@@ -1,10 +1,40 @@
 <!-- your_template.html -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<head>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    var checkbox = document.getElementById("trigger");
+    checkbox.addEventListener('change', function(event) {
+      if (event.target.type === 'checkbox') {
+          var gitElement = document.getElementById(event.target.value);
+          if(event.target.checked){
+            var dateInput = document.createElement('input');
+            dateInput.type = 'date';
+            dateInput.id = event.target.value + "cal";
+            dateInput.name = "dates"
+            dateInput.value = "{{date}}";
+            dateInput.required = true;
+            gitElement.appendChild(dateInput);
+            console.log('Clicked checkbox id:');
+          }
+          else {
+            gitElement.removeChild(document.getElementById(event.target.value + "cal"))
+
+        }
+      }
+  });
+
+});
+
+
+
+  </script>
+</head>
 
 <form method="post" >
   {% csrf_token %}
   {{ form.non_field_errors }}
-  
+  <div id = "trigger">
   {% for field in form %}
     <div class="card">
       <div class="card-header" id="heading{{ forloop.counter }}" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
@@ -22,7 +52,7 @@
       </div>
     </div>
   {% endfor %}
-  
+</div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

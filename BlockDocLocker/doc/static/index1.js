@@ -10,6 +10,8 @@ const methobj = {
     approveRequests : sendDataTransaction,
     allDocuments : callContractFunction,
     checkApprovals : callContractFunction,
+    allUsers : callContractFunction,
+    allCases : callContractFunction,
 }
 // Because init process of the MetaMaskSDK is async.
  setTimeout( async () => {
@@ -76,7 +78,7 @@ function connectContract(w3){
           },
           {
             "internalType": "uint256[]",
-            "name": "caseIdToadd",
+            "name": "caseIds",
             "type": "uint256[]"
           }
         ],
@@ -113,11 +115,6 @@ function connectContract(w3){
             "internalType": "struct Handle.IOUser[]",
             "name": "userstoAdd",
             "type": "tuple[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "addresses",
-            "type": "address[]"
           }
         ],
         "name": "addUsers",
@@ -130,11 +127,6 @@ function connectContract(w3){
           {
             "internalType": "uint256[]",
             "name": "indexes",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "times",
             "type": "uint256[]"
           }
         ],
@@ -242,6 +234,11 @@ function connectContract(w3){
                 "internalType": "address",
                 "name": "_issuer",
                 "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
               }
             ],
             "internalType": "struct Handle.Document[]",
@@ -294,14 +291,21 @@ function connectContract(w3){
         "name": "allDocuments",
         "outputs": [
           {
-            "internalType": "uint256[]",
+            "components": [
+              {
+                "internalType": "string",
+                "name": "documentName",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "documentId",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct Handle.IODocument[]",
             "name": "",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "string[]",
-            "name": "",
-            "type": "string[]"
+            "type": "tuple[]"
           },
           {
             "internalType": "uint256[]",
@@ -404,6 +408,125 @@ function connectContract(w3){
         "type": "function"
       },
       {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "value",
+            "type": "address"
+          }
+        ],
+        "name": "listCaseIdsperUser",
+        "outputs": [
+          {
+            "internalType": "uint256[]",
+            "name": "data",
+            "type": "uint256[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          }
+        ],
+        "name": "listCases",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "caseName",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "documentIds",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "address",
+                "name": "incharge",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct Handle.Case",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "sendIncharge",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "caseName",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "documentIds",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "address",
+                "name": "incharge",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct Handle.Case",
+            "name": "data",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "i",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "j",
+            "type": "uint256"
+          }
+        ],
+        "name": "viewdocsextra",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "use",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "cas",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "doc",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
         "inputs": [],
         "name": "viewDocuments",
         "outputs": [
@@ -443,6 +566,11 @@ function connectContract(w3){
                 "internalType": "address",
                 "name": "_issuer",
                 "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
               }
             ],
             "internalType": "struct Handle.Document[]",
@@ -454,22 +582,26 @@ function connectContract(w3){
         "type": "function"
       }
     ]`);
-      return  new w3.eth.Contract(abi, "0xcf0059f67D77619D48b4E1367B7E92762D7Df254");
+      return  new w3.eth.Contract(abi, "0xC1a49AF548F77769c3721Eb3dc260490f8928fEa");
+
 }
 
-async function sendDataTransaction(methodName, ...args) {
+async function sendDataTransaction(methodName, args) {
     // console.log(...args);
     // Use the 'send' function for transactions 
-    
+    obj = {
+      from: account,
+      to : "0xC1a49AF548F77769c3721Eb3dc260490f8928fEa",
+      gasPrice: await w3.eth.getGasPrice(),
+      'chainId': 1337,
+    }
     try{
-      console.log("sdafsdfasf");
-    const transaction =  contract.methods[methodName]( ...args).send({
-        from: account,
-        to : "0xcf0059f67D77619D48b4E1367B7E92762D7Df254",
-        gasPrice: await w3.eth.getGasPrice(),
-        'chainId': 1337,
-    })
+        var transaction ;
+        try{ transaction =  contract.methods[methodName]( ...args).send(obj)}
+        catch (TypeError){ transaction =  contract.methods[methodName]( args).send(obj) }
+
     return transaction
+
     } catch (error) {
         return error.message
     }
@@ -482,7 +614,7 @@ async function callContractFunction(methodName, ...args) {
       
         const result = contract.methods[methodName](...args).call({
             from: account,
-            to : "0xcf0059f67D77619D48b4E1367B7E92762D7Df254",
+            to : "0xC1a49AF548F77769c3721Eb3dc260490f8928fEa",
             gasPrice: await w3.eth.getGasPrice(),
             'chainId': 1337,
         });
