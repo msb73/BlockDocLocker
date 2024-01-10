@@ -6,9 +6,7 @@ def schedules(logs, n):
     prev_command = None
     for log in logs:
         logls = log.split(":")
-        print(logls)
         id, command, time = int(logls[0]), logls[1], int(logls[2])
-        # print(f"{prev_time=}   {time=}")
         if stack:
             if command == "start":
                 result[stack[-1]] += (time - prev_time) 
@@ -22,4 +20,4 @@ def schedules(logs, n):
         prev_time =  time
         prev_command = command
     return result
-print(schedules(logs, 3))
+# print(schedules(logs, 3))
