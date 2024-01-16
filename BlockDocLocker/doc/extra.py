@@ -2,20 +2,9 @@ import json
 from datetime import datetime as dt
 from django.utils.html import format_html
 from .names import *
-from .tables import ViewTable 
 from .ipfs import upload
-
 from django.urls import reverse
 # table View
-
-class Template:
-    def down_mapping(self):
-        pass
-    def up_mapping(self):
-        pass
-
-class ViewDocuments:
-    pass
 
 class Mapping:
     def get_context(meth, redirect):
@@ -38,7 +27,6 @@ class Mapping:
     def down_user_cases(data : str) -> list[int]:
         return [(int(i), int(i)) for i in json.loads(data)] 
 
-    # for table View form
     def down_check_approvals(data : str) -> list[dict]:
         ls = []
         for i in json.loads(data):
@@ -54,7 +42,6 @@ class Mapping:
                     })
         return ls
 
-    # for 2 drop down
     def down_all_cases(self, dic) -> (list[tuple], list[tuple]):
         # allCases I/P -> {'0': [['102', 'Ginson vs Yogi']], '1': ['0x28379662D72D25660af75b7F71D645303713C1cf', '0xbd5E32346805A87aaBD814D495404F6c04eB89a9'], '2': ['owner', 'Milind']}
         cases, users = [] , []
@@ -67,9 +54,7 @@ class Mapping:
             users.append((dic["1"][i] +  "              " + dic["2"][i], dic["1"][i]))
         return (cases, users)
 
-    # for drop down
-    @classmethod
-    def down_all_users(cls, data : str) -> list[tuple]:
+    def down_all_users(data : str) -> list[tuple]:
         ls = []
         addressName = json.loads(data)
         for i in range(len(addressName["0"])):
@@ -77,7 +62,7 @@ class Mapping:
                 (addressName["0"][i], addressName["1"][i] +  "              " + addressName["0"][i])
             )
         return ls
-    # for table form view   
+
     def down_all_documents(data: str) -> list[dict]:
         data = json.loads(data)
         case_data = {}
@@ -95,7 +80,6 @@ class Mapping:
                     case_data[v[1][:5]] = [{formCheckRequests[0] : int(v[1]), formCheckRequests[1] : v[0]}]
         return case_data
 
-    # for table view
     def down_check_requests(self, data : str):
         ls = []
         data = json.loads(data)
@@ -122,8 +106,7 @@ class Mapping:
 
 class UPMapping:
     
-    @classmethod
-    def get_context(cls, context, func = None, data = None,**kwargs):
+    def get_context(context, func = None, data = None,**kwargs):
         return {"web3method" : context,
                    "content" : func(data = data, **kwargs)}
               
@@ -150,9 +133,7 @@ class UPMapping:
         # [('csrfmiddlewaretoken', 'kbmaZP3Gsoin2bxWAw3e6JEF7WUPo4uUr7lNt257tXYOzeNTF8kT2IGj9OJqKV9n'), ('case_10100', '101000000003'), ('dates', '2024-01-13'), ('case_10200', '102000000001')]
         # print(list(data.items()))
             
-        
-    @classmethod
-    def up_add_users(cls, data):
+    def up_add_users(data):
         ls = []
         userId = data.getlist(formAddUser[0])
         username = data.getlist(formAddUser[1])
@@ -181,9 +162,6 @@ class UPMapping:
             ls[1].append(user)
         return ls
     
-    
-    
-    @classmethod
     def up_upload_documents(cls, data, **kwargs):
         documentName = data.getlist(formUploadDocuments[0])
         caseNo = data.getlist(formUploadDocuments[1])
