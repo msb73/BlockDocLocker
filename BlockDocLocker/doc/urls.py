@@ -5,15 +5,14 @@ from . import views
 
 urlpatterns = [
     path('',views.home, name="doc-home"),
-    path('updocument/', views.uploadDocuments.as_view(), name='uploadDocuments'),
+    # path('about/', views.about, name='doc-about'),
+    path('uploadDocument/', views.uploadDocuments.as_view(), name='uploadDocument'),
     path('documents/', views.ViewDocuments.as_view(), name = "viewDocuments"),
-    path('addusers/', views.AddUser.as_view(), name = "addUsers"),
-    path('checkrequests/', views.SendRequestView.as_view(), name='sendRequests'),
-    path('approvals/', views.ApproveRequests.as_view(), name='checkApprovals'),
-    path('addcases/', views.AddCases.as_view(), name='addCases'), 
-    path('removeusers/', views.RemoveUsers.as_view(), name='removeUsers'),
-    path('changeincharge/', views.ChangeIncharge.as_view(), name='changeIncharge'), 
-    
+    path('addUsers/', views.AddUser.as_view(), name = "addUsers"),
+    # path('checkRequests/', views.CSARequestView.as_view(), name='allUsers'),
+    path('checkRequests/', views.SendRequestView.as_view(), name='allDocuments'),
+    # path('checkRequests/', views.CSARequestView.as_view(), name='allCases'),
+    path('Requests/', views.ApproveRequests.as_view(), name='checkApprovals'),
 
     ]
 # allCases -> {'0': [['102', 'Ginson vs Yogi']], '1': ['0x28379662D72D25660af75b7F71D645303713C1cf', '0xbd5E32346805A87aaBD814D495404F6c04eB89a9'], '2': ['owner', 'Milind']}

@@ -3,7 +3,3 @@ tableCheckApprovals = ("documentId", "documentName", "issuerName", "timestamp", 
 tableCheckRequests = ("documentId", "documentName")
 tableAllUsers = ("userIds" , "userNames")
 formCheckRequests = ("documentId", "name")
-formUploadDocuments =  ("documentName", "caseNo", "file_field", "description")
-formAddUser = ("userId","username","deptNumber","userType")
-formAddCases = ("caseName", "caseNo", "incharge")
-formChangeIncharge = ("cases", "users")

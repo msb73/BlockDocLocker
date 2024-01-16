@@ -1,3 +1,5 @@
+{% extends "doc/base.html" %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,20 +9,11 @@
 </head>
 <body>
     
-    <a href="updocument/" target="_blank">Upload Docs</a>
-    <br>
-    <a href="documents/" target="_blank">viewDocuments</a>
-    <br>
-    <a href="addusers/" target="_blank">Add Users</a>
-    <br>
-    <a href="checkrequests/" target="_blank">checkRequests</a> 
-    <br>
-    <a href="approvals/" target="_blank">ApproveRequest</a>
-    <br>
-    <a href="addcases/" target="_blank"> Add Cases </a>
-    <br>
-    <a href="removeusers/" target="_blank"> Remove Users </a>
-    <br>
-    <a href="changeincharge/" target="_blank"> Change Incharge </a>
+    <a href="documents/?meth=viewDocuments" target="_blank">view Docs</a>
+    <a href="uploadDocument/" target="_blank">upload Docs</a>
+    <a href="addUsers/" target="_blank">Add Users</a >
+    <a href="checkRequests/?meth=checkRequests" target="_blank">checkRequests change as new function added in handle</a> 
+    <a href="approveRequests/?meth=checkRequests" target="_blank">ApproveRequest</a>
 </body>
 </html>
+{% endblock content %}

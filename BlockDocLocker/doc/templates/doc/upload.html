@@ -1,36 +1,84 @@
-<html>
+{% extends "doc/base.html" %}
+{%block content%}
+<!-- <html>
     <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
     </head>
-<body>
+<body> -->
 {% load crispy_forms_tags %}
 
-{%block content%}
-<div class="content-section">
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <fieldset class="form-group">
-            {{form|crispy}}
-        </fieldset>
-        
-        <div class="form-group">
-            <button class="btn btn-outline-info" type="submit" name= "submit">Submit</button>
+
+    <div class="content-section">
+        <div id="forms-container">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    {{ form|crispy }}
+                </fieldset>
+            </form>
         </div>
-    </form>
-    
-</div>
-{%endblock content%}
+        <div class="form-group">
+            <button class="btn btn-outline-success" id="add-form">
+                <span class="plus-minus-symbol">+</span>
+            </button>
+            <button class="btn btn-outline-danger" id="remove-form">
+                <span class="plus-minus-symbol">−</span>
+            </button>
+            <button class="btn btn-outline-info" style="float: inline-end;" type="submit">Submit</button>
+        </div>
+    </div>
+
+
     <script>
-        $(document).ready(function() {
-            $('#id_users').select2();
-            $('#id_incharge').select2();
-            $('#id_caseNo').select2();
-            $('#id_cases').select2();
+        document.addEventListener("DOMContentLoaded", function () {
+            const formsContainer = document.getElementById('forms-container');
+            const addFormButton = document.getElementById('add-form');
+            const removeFormButton = document.getElementById('remove-form');
+
+            let formCount = 1; // Initial form count
+
+            addFormButton.addEventListener('click', function () {
+                if (formCount < 10) { // Limit forms to 10
+                    const newForm = document.createElement('form');
+                    newForm.method = 'POST';
+                    newForm.enctype = 'multipart/form-data';
+                    newForm.innerHTML = `
+                {% csrf_token %}
+                    <fieldset class="form-group">
+                        {{ form|crispy }}
+                    </fieldset>
+                `;
+                    formsContainer.appendChild(newForm);
+                    formCount++;
+                } else {
+                    alert('Maximum 10 forms allowed.');
+                }
+            });
+
+            removeFormButton.addEventListener('click', function () {
+                const forms = formsContainer.getElementsByTagName('form');
+                if (formCount > 1) { // Ensure at least one form remains
+                    forms[forms.length - 1].remove();
+                    formCount--;
+                } else {
+                    alert('At least one form should remain.');
+                }
+            });
         });
     </script>
+
+
+{%endblock%}
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+
 </body>
+
 </html>
