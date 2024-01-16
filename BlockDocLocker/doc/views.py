@@ -1,13 +1,9 @@
-from typing import Any
 from django.shortcuts import render
-from .models import Post
 from django.views.generic.edit import FormView
 from .form import FileFieldForm, AddUsersForm,  DocumentSelectionForm, AddCasesForm
 import json
-from django.urls import reverse
 from django.http import HttpResponse
 from django_tables2 import SingleTableView
-from django.utils.html import format_html
 from .tables import ViewTable  , CheckRequestsTable, CheckApprovalsTable
 from .models import DummyModel
 from .ipfs import upload
