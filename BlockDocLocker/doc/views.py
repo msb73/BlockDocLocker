@@ -1,14 +1,13 @@
-from django.shortcuts import render
-from django.views.generic.edit import FormView
-from .form import FileFieldForm, AddUsersForm,  SendRequestForm, AddCasesForm, RemoveUsersForm, ChangeInchargeForm
-import json
-from django.http import HttpResponse
-from django_tables2 import SingleTableView
-from .tables import ViewTable  , CheckRequestsTable, CheckApprovalsTable
-from .models import DummyModel
-from .names import *
-from .extra import Mapping, UPMapping
-from datetime import datetime,  timedelta 
+from django.shortcuts import render, redirect
+from .models import Post
+from .form import UploadFileForm
+from django.contrib import messages
+from django.http import FileResponse
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from ipfs import ipfs_file
+import io
+import os
+import tempfile
 
 def home(request):
      
@@ -40,60 +39,13 @@ class AddCases(FormView):
             context = UPMapping.get_context("addCases", func = UPMapping.up_add_cases, data = request.POST)
             return render(request, "doc/first.html", context = context)
 
-class RemoveUsers(FormView): 
-    template_name = "doc/upload.html"
-    form_class = RemoveUsersForm
-    success_url = ''
-    def get(self, request, *args, **kwargs):
-        if request.method == "GET" and not request.GET:  # if its empty 
-            context = Mapping.get_context(meth= "allUsers", redirect = "removeUsers")
-            return render(request, "doc/first.html", context = context)
-        return super().get(self, request, *args, **kwargs)
-    
-    def post(self, request, *args, **kwargs):
-        if "data" in request.POST:
-            form = self.form_class(case_data = Mapping.down_all_users(data = request.POST.get("data")))
-            form.is_bound = False
-            return render(request, self.template_name, {'form': form})
-        if "users" in request.POST:
-            context = UPMapping.get_context("removeUsers", func = UPMapping.up_remove_users, data = request.POST)
-            return render(request, "doc/first.html", context = context)
-    
-class ChangeIncharge(FormView): 
-    template_name = "doc/upload.html"
-    form_class = ChangeInchargeForm
-    success_url = ''
-    def get(self, request, *args, **kwargs):
-        if request.method == "GET" and not request.GET:  # if its empty 
-            context = Mapping.get_context(meth= "allCases", redirect = "changeIncharge")
-            return render(request, "doc/first.html", context = context)
-        return super().get(self, request, *args, **kwargs)
-    
-    def post(self, request, *args, **kwargs):
-        if "data" in request.POST:
-            form = self.form_class(case_data = Mapping.down_change_incharge(data = request.POST.get("data")))
-            form.is_bound = False
-            return render(request, self.template_name, {'form': form})
-        if "users" in request.POST:
-            context = UPMapping.get_context("changeInCharge", func = UPMapping.up_change_incharge, data = request.POST)
-            print(context)
-            return render(request, "doc/first.html", context = context)
+            uploaded_document = request.FILES['file']
+            temp_file = tempfile.NamedTemporaryFile(delete=False)
 
-class uploadDocuments(FormView):
-    form_class = FileFieldForm
-    template_name = "doc/upload.html"  
-    success_url = "" 
-    def get(self, request, *args, **kwargs):
-        if request.method == "GET" and not request.GET:  # if its empty 
-            context = Mapping.get_context(meth= "userCases", redirect = "uploadDocuments")
-            return render(request, "doc/first.html", context = context)
-        
-        return super().get(self, request, *args, **kwargs)
-    def post(self, request, *args, **kwargs):
-        if "data"  in request.POST:
-            form = FileFieldForm(case_data = Mapping.down_user_cases(request.POST.get("data")))
-            form.is_bound = False
-            return render(request, self.template_name, {"form" : form})
+            for chunk in uploaded_document:
+                temp_file.write(chunk)
+                
+            uuid=ipfs_file.upload((f"{temp_file.name}").replace("\\","/")) 
 
         if "caseNo" in request.POST:
             form = self.get_form(self.form_class)
@@ -170,22 +122,12 @@ class SendRequestView(FormView):
         print(context["content"]) 
         return render(request, "doc/first.html", context = context)
 
-class ApproveRequests(SingleTableView): 
-    table_data = []
-    table_class = CheckApprovalsTable
-    model = DummyModel
-    template_name = 'doc/viewDocuments.html'
-    def get(self, request, *args, **kwargs):
-        if request.method == "GET" and not request.GET:  # if its empty 
-            context = Mapping.get_context(meth= "checkApprovals", redirect = "checkApprovals")
-            return render(request, "doc/first.html", context = context)
-        return super().get(self, request, *args, **kwargs)
-    
-    def post(self,  request, *args, **kwargs):
-        if "data" in request.POST:
-            ApproveRequests.table_data = Mapping.down_check_approvals(data = request.POST.get("data"))
-        if "selected_options" in request.POST:
-            context = UPMapping.get_context("approveRequests", func = UPMapping.up_approve_requests, data = request.POST.getlist("selected_options"))
-            return render(request, "doc/first.html", context = context)
-        return self.get(request, *args, **kwargs)
-    
+def about(request):
+    return render(request,'doc/about.html')
+
+def document_retrive(request):
+    response=ipfs_file.retrive()
+    file_data=response.content
+    content_type = response.headers.get('content-type', 'application/octet-stream')
+    response = FileResponse(io.BytesIO(file_data), content_type=content_type)
+    return response

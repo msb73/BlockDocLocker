@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,3 +25,55 @@
     <a href="changeincharge/" target="_blank"> Change Incharge </a>
 </body>
 </html>
+=======
+{% extends "doc/base.html"%}
+{%block content%}
+
+<article>
+  <div class="user-container col-md-12">
+    <div class="user-box">
+      <h2>User ID</h2>
+      <p>123abc</p> 
+    </div>
+
+    <div class="user-box">
+      <h2>User Address</h2>
+      <p>321bca</p>
+    </div>
+
+    <div class="user-box">
+      <h2>User Address</h2>
+      <p>321bca</p>
+    </div>
+
+    <!-- <div class="user-box">
+      <h2>User Address</h2>
+      <p>321bca</p>
+    </div> -->
+  </div>
+</article>
+
+<article>
+  <div>
+    <table class="table table-striped thead-dark">
+      <tr>
+        <th>Sr. No.</th>
+        <th>Document</th>
+        <th>Date and Time Uploaded
+        <th>
+      </tr>
+      {%for post in posts%}
+      <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{post.document}}</td>
+        <td>{{post.date_posted}}</td>
+        <td>
+          <a href="{%url 'document'%}" target="_blank"><button>View</button></a>
+        </td>
+      </tr>
+      {%endfor%}
+    </table>
+  </div>
+</article>
+{% endblock content%}
+>>>>>>> a9f95ada9fad8ab2fb9516405e704407236cc45f
