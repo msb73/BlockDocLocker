@@ -7,6 +7,8 @@ from django.urls import reverse
 # table View
 
 class Mapping:
+    def __init__(self) -> None:
+        pass
     def get_context(meth, redirect):
         return {"web3method" : meth,
                    "redirect" : reverse(redirect)} 
@@ -25,7 +27,8 @@ class Mapping:
         return (ls)
     
     def down_user_cases(data : str) -> list[int]:
-        return [(int(i), int(i)) for i in json.loads(data)] 
+        # setattr(self, "case_data", [(i, i) for i in json.loads(data)])
+        return [(i, i) for i in json.loads(data)] 
 
     def down_check_approvals(data : str) -> list[dict]:
         ls = []
@@ -105,6 +108,8 @@ class Mapping:
             
 
 class UPMapping:
+    def __init__(self) -> None:
+        pass
     
     def get_context(context, func = None, data = None,**kwargs):
         return {"web3method" : context,
@@ -140,7 +145,7 @@ class UPMapping:
         deptNumber = data.getlist(formAddUser[2])
         userType = data.getlist(formAddUser[3])
         for i in range(len(username)):
-            ls.append([ userId[i], userType[i], username[i], deptNumber[i] ])
+            ls.append([ userId[i], int(userType[i]), username[i], int(deptNumber[i]) ]) 
         return ls
             
     def up_add_cases(data):
@@ -162,17 +167,21 @@ class UPMapping:
             ls[1].append(user)
         return ls
     
-    def up_upload_documents(cls, data, **kwargs):
+    def up_upload_documents(data, **kwargs):
         documentName = data.getlist(formUploadDocuments[0])
         caseNo = data.getlist(formUploadDocuments[1])
+        print(dir(kwargs["form"]))
         files = kwargs["form"].cleaned_data[formUploadDocuments[2]]
+        
         description = data.getlist(formUploadDocuments[3])
         ls = []
         for i, file in enumerate(files):
+            print(type(file))
             doctype= file.content_type
             for _ in range(3):
                 cid = False
-                cid = upload(file, "None")
+                # cid = upload(file, "None")
+                cid = "True"
                 if cid: break
             else:   raise ValueError(f"CID cannot be created please try later  {file.name}")
             ls.append([

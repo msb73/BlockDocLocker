@@ -24,8 +24,7 @@ class MultipleFileField(forms.FileField):
 class FileFieldForm(forms.Form):
     def __init__(self, *args,case_data = [], **kwargs):
         self.case_data = case_data
-        super(FileFieldForm, self).__init__(*args, **kwargs)
-        print(self.case_data)
+        super(FileFieldForm, self).__init__(*args, **kwargs) 
         self.fields[formUploadDocuments[0]] = forms.CharField(widget= forms.TextInput)
         self.fields[formUploadDocuments[1]] = forms.ChoiceField( widget = fms.Select2Widget(attrs={'style': 'width: 100%;'}), choices = self.case_data)
         self.fields[formUploadDocuments[2]] = MultipleFileField()
@@ -36,7 +35,7 @@ class AddUsersForm(forms.Form):
     userId = forms.CharField(widget= forms.TextInput, max_length=42, min_length=42)
     username = forms.CharField(widget=forms.TextInput, max_length=12, min_length=5)
     deptNumber = forms.CharField(widget= forms.NumberInput)
-    userType = forms.ChoiceField(choices= ((1, "name" ), (2, "USER" ), ) )
+    userType = forms.ChoiceField(choices= ((0, "ISSUER" ), (1, "USER" ), ) )
 
 
         
@@ -50,11 +49,10 @@ class AddCasesForm(forms.Form):
         self.fields[formAddCases[2]] = forms.ChoiceField( widget = fms.Select2Widget(attrs={'style': 'width: 100%;'}), choices = case_data)
 
 class SendRequestForm(forms.Form):
-    def __init__(self, case_data, *args, **kwargs):
+    def __init__(self, case_data = {}, *args, **kwargs):
         super(SendRequestForm, self).__init__(*args, **kwargs)
-        # Iterate through case data to dynamically create form fields
         for case_id, documents in case_data.items():
-            case_field_name = f'case_{case_id}'   
+            case_field_name = f'case_{case_id}'
             self.fields[case_field_name] = forms.MultipleChoiceField(
                 choices=[(doc[formCheckRequests[0]],
                     format_html("{}  {} {}".format(doc[formCheckRequests[0]], doc[formCheckRequests[1]], f'<div id = "{doc[formCheckRequests[0]]}"> </div>'))) 

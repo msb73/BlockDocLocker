@@ -11,14 +11,12 @@ from .extra import Mapping, UPMapping
 from datetime import datetime,  timedelta 
 
 def home(request):
-     
+    obj1 = Mapping()
     transact ={
         "function" : "viewDocuments",
         'data' : None
     }
     return render(request, 'doc/home.html', context= {'transact' : json.dumps(transact) })
-
-
 class AddCases(FormView):
     template_name = "doc/upload.html"
     form_class = AddCasesForm
@@ -82,28 +80,34 @@ class ChangeIncharge(FormView):
 class uploadDocuments(FormView):
     form_class = FileFieldForm
     template_name = "doc/upload.html"  
-    success_url = "" 
+    success_url = ""
     def get(self, request, *args, **kwargs):
         if request.method == "GET" and not request.GET:  # if its empty 
             context = Mapping.get_context(meth= "userCases", redirect = "uploadDocuments")
             return render(request, "doc/first.html", context = context)
-        
         return super().get(self, request, *args, **kwargs)
+    
     def post(self, request, *args, **kwargs):
         if "data"  in request.POST:
-            form = FileFieldForm(case_data = Mapping.down_user_cases(request.POST.get("data")))
+            request.session["case_data"] = Mapping.down_user_cases(request.POST.get("data"))
+            form = self.form_class(case_data = request.session["case_data"])
             form.is_bound = False
             return render(request, self.template_name, {"form" : form})
-
         if "caseNo" in request.POST:
-            form = self.get_form(self.form_class)
+            form = self.get_form(form_class=FileFieldForm)
+            print(f'{request.session["case_data"]=}') 
+            setattr(form.fields["caseNo"], "choices", request.session["case_data"]) 
+            # form.is_bound = False
             if form.is_valid():
-               return self.form_valid(form, request) 
+                print("valid")
+                return self.form_valid(form, request) 
             else:
+                print(form.non_field_errors)
                 return self.form_invalid(form) 
 
     def form_valid(self,form, request):
-        try:
+        try: 
+            print("ERROR")
             context = UPMapping.get_context("uploadDocument", func = UPMapping.up_upload_documents, data = request.POST, form = form)
         except Exception as e:
             return HttpResponse(f"Error {e}")
@@ -158,8 +162,8 @@ class SendRequestView(FormView):
             date = str((datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d"))
             return render(request, self.template_name, {'form': form, "date" : date })  
             
-        form = self.get_form(self.get_form_class()) 
-        if "dates" in request.POST:
+        form = self.get_form(form_class=SendRequestForm) 
+        if "dates" in request.POST: 
             if form.is_valid():
                 return self.form_valid(request) 
             else:

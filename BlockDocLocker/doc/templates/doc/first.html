@@ -34,9 +34,8 @@
                 error = content;
                 content = JSON.parse(content);
                 var promise = methobj[web3method](web3method, (content));
-                promise.then(value => {  
-                    console.log(value);
-                    raise(value);
+                promise.then(value => {   
+                    raise(JSON.stringify(value));
                 }).catch((e) => {
                     alert("rejected");
                     error = e;
@@ -45,6 +44,7 @@
                         {% comment %} var error = (JSON.parse(e.slice(25,)).message)
                         console.log("Cathc1")
                         console.error(error); // "oh, no!" {% endcomment %}
+
                         console.log(e);
                         alert(e);
                         
@@ -88,10 +88,7 @@
                 
                 // Continue with form submission or other actions
             }).catch((e) => {
-                raise("Error occured" + e.message)
-                var error = (JSON.parse(e.slice(25,)).message)
-                console.error(error); // "oh, no!"
-                alert(error);
+                raise("Error occured -> " + e.message.slice(e.message.indexOf('^') + 1, e.message.indexOf('$')))
               }); 
         
         
