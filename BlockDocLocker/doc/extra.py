@@ -2,25 +2,16 @@ import json
 from datetime import datetime as dt
 from django.utils.html import format_html
 from .names import *
-from .tables import ViewTable 
-
-
+from .ipfs import upload
 from django.urls import reverse
 # table View
 
-class Template:
-    def down_mapping(self):
-        pass
-    def up_mapping(self):
-        pass
-
-class ViewDocuments:
-    pass
-
 class Mapping:
-    def get_context(context):
-        return {"web3method" : context,
-                   "redirect" : reverse(context)} 
+    def __init__(self) -> None:
+        pass
+    def get_context(meth, redirect):
+        return {"web3method" : meth,
+                   "redirect" : reverse(redirect)} 
     
     def down_view_documents(data ) -> list[dict]:
         ls = []
@@ -31,14 +22,19 @@ class Mapping:
                         tableViewDocs[2] : int(i[2]),
     		    	    tableViewDocs[3] : format_html("<a href = '{}' target='_blank'> Click </a>","https://ipfs.io/ipfs/"+ i[3]),
     		    	    tableViewDocs[4] : dt.fromtimestamp((int)(i[4])),
-    		    	    tableViewDocs[5] : i[6], 
+    		    	    tableViewDocs[5] : i[5], 
                     })
-        return (ls )
+        return (ls)
     
-    # for table View form
+    def down_user_cases(data : str) -> list[int]:
+        # setattr(self, "case_data", [(i, i) for i in json.loads(data)])
+        return [(i, i) for i in json.loads(data)] 
+
     def down_check_approvals(data : str) -> list[dict]:
         ls = []
         for i in json.loads(data):
+            if i[3] == "0" :
+                continue
             ls.append({
                 tableCheckApprovals[0] : i[3], 
                 tableCheckApprovals[1] :i[4], 
@@ -49,7 +45,6 @@ class Mapping:
                     })
         return ls
 
-    # for 2 drop down
     def down_all_cases(self, dic) -> (list[tuple], list[tuple]):
         # allCases I/P -> {'0': [['102', 'Ginson vs Yogi']], '1': ['0x28379662D72D25660af75b7F71D645303713C1cf', '0xbd5E32346805A87aaBD814D495404F6c04eB89a9'], '2': ['owner', 'Milind']}
         cases, users = [] , []
@@ -62,16 +57,15 @@ class Mapping:
             users.append((dic["1"][i] +  "              " + dic["2"][i], dic["1"][i]))
         return (cases, users)
 
-    # for drop down
-    def down_all_users(self, data : str) -> list[tuple]:
-        users = []
-        dic = json.loads(data)
-        for i in range(len(dic["0"])):
-            users.append(
-                (dic["0"][i] +  "              " + dic["1"][i], dic["1"][i])
+    def down_all_users(data : str) -> list[tuple]:
+        ls = []
+        addressName = json.loads(data)
+        for i in range(len(addressName["0"])):
+            ls.append(
+                (addressName["0"][i], addressName["1"][i] +  "              " + addressName["0"][i])
             )
+        return ls
 
-    # for table form view   
     def down_all_documents(data: str) -> list[dict]:
         data = json.loads(data)
         case_data = {}
@@ -89,7 +83,6 @@ class Mapping:
                     case_data[v[1][:5]] = [{formCheckRequests[0] : int(v[1]), formCheckRequests[1] : v[0]}]
         return case_data
 
-    # for table view
     def down_check_requests(self, data : str):
         ls = []
         data = json.loads(data)
@@ -101,15 +94,29 @@ class Mapping:
                 "documentId" : data["0"][i]
             })
             
+    def down_change_incharge(data):
+        #{'0': [['102', 'Yogi'], ['0', '']], '1': ['0x28379662D72D25660af75b7F71D645303713C1cf', '0xbd5E32346805A87aaBD814D495404F6c04eB89a9'], '2': ['Owner', 'Sagar']}
+        data = json.loads(data)
+        casesls, usersls = [], []
+        for case in data["0"]:
+            if case[0] != "0":
+                casesls.append( (int(case[0]) , case[0] + "  -> " + case[1] ) )
+        
+        for userid, username in zip(data["1"], data["2"]):
+            usersls.append( (userid, username + "  ->  " + userid) )
+        return (casesls, usersls)
+            
 
 class UPMapping:
-    @classmethod
-    def get_context(cls, context, func = None, data = None):
+    def __init__(self) -> None:
+        pass
+    
+    def get_context(context, func = None, data = None,**kwargs):
         return {"web3method" : context,
-                   "content" : func(data = data)}
+                   "content" : func(data = data, **kwargs)}
               
     def up_approve_requests(data):
-        return json.loads(data)
+        return [int(i) for i in data]
     
     def up_send_requests(data):
         print("called")
@@ -131,21 +138,54 @@ class UPMapping:
         # [('csrfmiddlewaretoken', 'kbmaZP3Gsoin2bxWAw3e6JEF7WUPo4uUr7lNt257tXYOzeNTF8kT2IGj9OJqKV9n'), ('case_10100', '101000000003'), ('dates', '2024-01-13'), ('case_10200', '102000000001')]
         # print(list(data.items()))
             
+    def up_add_users(data):
+        ls = []
+        userId = data.getlist(formAddUser[0])
+        username = data.getlist(formAddUser[1])
+        deptNumber = data.getlist(formAddUser[2])
+        userType = data.getlist(formAddUser[3])
+        for i in range(len(username)):
+            ls.append([ userId[i], int(userType[i]), username[i], int(deptNumber[i]) ]) 
+        return ls
+            
+    def up_add_cases(data):
+        caseName = data.getlist(formAddCases[0])
+        caseNo = data.getlist(formAddCases[1])
+        incharge = data.getlist(formAddCases[2])
+        ls = []
+        for i, j in zip(caseName,  incharge):
+            ls.append([i, [], j, []])
+        return [ls, caseNo]
+    
+    def up_remove_users(data):
+        return [i for i in data.getlist("users")]
+    
+    def up_change_incharge(data):
+        ls = [[], []]
+        for case, user in zip(data.getlist("cases"), data.getlist("users")):
+            ls[0].append(int(case))
+            ls[1].append(user)
+        return ls
+    
+    def up_upload_documents(data, **kwargs):
+        documentName = data.getlist(formUploadDocuments[0])
+        caseNo = data.getlist(formUploadDocuments[1])
+        print(dir(kwargs["form"]))
+        files = kwargs["form"].cleaned_data[formUploadDocuments[2]]
         
-    
-    def up_add_users(self, data):
-        pass
-    
-    def up_add_cases(self, data):
-        pass
-    
-    def up_change_incharge(self, data):
-        pass
-    
-    def remove_users(self, data):
-        pass
-    
-    def up_upload_documents(self, data):
-        pass
-
+        description = data.getlist(formUploadDocuments[3])
+        ls = []
+        for i, file in enumerate(files):
+            print(type(file))
+            doctype= file.content_type
+            for _ in range(3):
+                cid = False
+                # cid = upload(file, "None")
+                cid = "True"
+                if cid: break
+            else:   raise ValueError(f"CID cannot be created please try later  {file.name}")
+            ls.append([
+                documentName[i], int(caseNo[i]), 0000000, cid, 0000000, doctype , "0x0000000000000000000000000000000000000000", description[i]
+            ])
+        return ls
 

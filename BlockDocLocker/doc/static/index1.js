@@ -12,6 +12,9 @@ const methobj = {
     checkApprovals : callContractFunction,
     allUsers : callContractFunction,
     allCases : callContractFunction,
+    addCases : sendDataTransaction,
+    userCases : callContractFunction,
+    changeInCharge : sendDataTransaction
 }
 // Because init process of the MetaMaskSDK is async.
  setTimeout( async () => {
@@ -70,6 +73,11 @@ function connectContract(w3){
                 "internalType": "address",
                 "name": "incharge",
                 "type": "address"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "requests",
+                "type": "uint256[]"
               }
             ],
             "internalType": "struct Handle.Case[]",
@@ -156,6 +164,13 @@ function connectContract(w3){
       {
         "inputs": [],
         "name": "extra",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "refresh",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -408,119 +423,13 @@ function connectContract(w3){
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "value",
-            "type": "address"
-          }
-        ],
-        "name": "listCaseIdsperUser",
+        "inputs": [],
+        "name": "userCases",
         "outputs": [
           {
             "internalType": "uint256[]",
-            "name": "data",
-            "type": "uint256[]"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "value",
-            "type": "uint256"
-          }
-        ],
-        "name": "listCases",
-        "outputs": [
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "caseName",
-                "type": "string"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "documentIds",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "address",
-                "name": "incharge",
-                "type": "address"
-              }
-            ],
-            "internalType": "struct Handle.Case",
             "name": "",
-            "type": "tuple"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "sendIncharge",
-        "outputs": [
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "caseName",
-                "type": "string"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "documentIds",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "address",
-                "name": "incharge",
-                "type": "address"
-              }
-            ],
-            "internalType": "struct Handle.Case",
-            "name": "data",
-            "type": "tuple"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "i",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "j",
-            "type": "uint256"
-          }
-        ],
-        "name": "viewdocsextra",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "use",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "cas",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "doc",
-            "type": "uint256"
+            "type": "uint256[]"
           }
         ],
         "stateMutability": "view",
@@ -582,7 +491,7 @@ function connectContract(w3){
         "type": "function"
       }
     ]`);
-      return  new w3.eth.Contract(abi, "0xffE3E2BAF487A53Ae02e638425018EBebe7bc25a");
+      return  new w3.eth.Contract(abi, "0xcB4f6Cd91BB28330F8227fBa55960e4b9D14635c");
 
 }
 
@@ -591,7 +500,7 @@ async function sendDataTransaction(methodName, args) {
     // Use the 'send' function for transactions 
     obj = {
       from: account,
-      to : "0xffE3E2BAF487A53Ae02e638425018EBebe7bc25a",
+      to : "0xcB4f6Cd91BB28330F8227fBa55960e4b9D14635c",
       gasPrice: await w3.eth.getGasPrice(),
       'chainId': 1337,
     }
@@ -614,7 +523,7 @@ async function callContractFunction(methodName, ...args) {
       
         const result = contract.methods[methodName](...args).call({
             from: account,
-            to : "0xffE3E2BAF487A53Ae02e638425018EBebe7bc25a",
+            to : "0xcB4f6Cd91BB28330F8227fBa55960e4b9D14635c",
             gasPrice: await w3.eth.getGasPrice(),
             'chainId': 1337,
         });

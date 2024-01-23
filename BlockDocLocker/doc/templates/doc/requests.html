@@ -5,12 +5,12 @@
 
 <head>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      var checkbox = document.getElementById("trigger");
-      checkbox.addEventListener('change', function (event) {
-        if (event.target.type === 'checkbox') {
+    document.addEventListener("DOMContentLoaded", function() {
+    var checkbox = document.getElementById("trigger");
+    checkbox.addEventListener('change', function(event) {
+      if (event.target.type === 'checkbox') {
           var gitElement = document.getElementById(event.target.value);
-          if (event.target.checked) {
+          if(event.target.checked){
             var dateInput = document.createElement('input');
             dateInput.type = 'date';
             dateInput.id = event.target.value + "cal";
@@ -22,12 +22,16 @@
           }
           else {
             gitElement.removeChild(document.getElementById(event.target.value + "cal"))
-
-          }
         }
-      });
+      }
+  });
 
-    });
+}
+);
+
+
+
+  </script>
 
 
 

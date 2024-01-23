@@ -1,4 +1,2 @@
-all
-( [ [ 0x9cCE0bbc4A17E10c7409962ed22a93099016c84B, 0, "Sagar", 20 ] , [ 0xae1bD088A23B2041ef06CD4553D80e34A7DBd3f6, 0, "Owner", 20 ] ] )
-( [ [ "Ginson vs Yogi", [], 0xae1bD088A23B2041ef06CD4553D80e34A7DBd3f6],[ "Yogi", [], 0xae1bD088A23B2041ef06CD4553D80e34A7DBd3f6] ] ), [101, 102]
-([[ "case102-1", 102, 21, "Dafsadfasdfcafs", 999999, "text", 0x9b7A93538D87fBBBA91b90aA46D2E28D5E5A772b, "Nothing" ],[ "case102-2", 102, 21, "23423423", 999999, "text", 0x9b7A93538D87fBBBA91b90aA46D2E28D5E5A772b, "Nothing" ], [ "case101-1", 101, 21, "ASEiC", 999999, "text", 0x9b7A93538D87fBBBA91b90aA46D2E28D5E5A772b, "Nothing" ]])
+class D:
+    

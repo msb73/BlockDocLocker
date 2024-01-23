@@ -42,9 +42,9 @@
                     error = e;
                     raise("Document not uploaded all changes revoked");
                     if(typeof(e) == String){
-                        {% comment %} var error = (JSON.parse(e.slice(25,)).message)
+                        var error = (JSON.parse(e.slice(25,)).message)
                         console.log("Cathc1")
-                        console.error(error); // "oh, no!" {% endcomment %}
+                        console.error(error); 
                         console.log(e);
                         alert(e);
                         

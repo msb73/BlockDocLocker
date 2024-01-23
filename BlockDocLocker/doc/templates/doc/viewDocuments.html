@@ -2,10 +2,11 @@
 {% block content %}
 <html>
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <script>
-        var check;
+        var check ;
 
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             var selectedOptions = JSON.parse(sessionStorage.getItem('selectedOptions')) || {};
             for (var optionId in selectedOptions) {
                 if (selectedOptions.hasOwnProperty(optionId)) {
