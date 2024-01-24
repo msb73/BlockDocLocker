@@ -1,84 +1,260 @@
 body {
-    background: #fafafa;
-    color: #333333;
-    margin-top: 5rem;
-  }
+  background: #fafafa;
+  color: #333333;
+  /* background-image: url('https://www.cloud4c.com/vn/sites/vn/files/2023-11/Threat-hunting-cloud4c-webpage-1_0.webp'); Replace 'path/to/your/image.jpg' with your image path */
+  background-image: url('https://images.blocksurvey.io/cdn-cgi/imagedelivery/G6cPOuGZ4Z_bEV13gBxixw/templates/forensic-examination-request-form.png/l');
+  background-size: cover; /* Adjusts the background image size */
+  background-repeat: no-repeat; 
+  background-attachment: fixed;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+  color: #444444;
   
-  h1, h2, h3, h4, h5, h6 {
-    color: #444444;
-  }
-  
-  ul {
-    margin: 0;
-  }
-  
-  .bg-steel {
-    background-color: #5f788a;
-  }
-  
-  .site-header .navbar-nav .nav-link {
-    color: #dbcbcb;
-  }
-  
-  .site-header .navbar-nav .nav-link:hover {
-    color: #ffffff;
-  }
-  
-  .site-header .navbar-nav .nav-link.active {
-    font-weight: 500;
-  }
-  
-  .content-section {
-    background: #ffffff;
-    padding: 10px 20px;
-    border: 1px solid #dddddd;
-    border-radius: 3px;
-    margin-bottom: 20px;
-  }
-  
-  .article-title {
-    color: #444444;
-  }
-  
-  a.article-title:hover {
-    color: #428bca;
-    text-decoration: none;
-  }
-  
-  .article-content {
-    white-space: pre-line;
-  }
-  
-  .article-img {
-    height: 65px;
-    width: 65px;
-    margin-right: 16px;
-  }
-  
-  .article-metadata {
-    padding-bottom: 1px;
-    margin-bottom: 4px;
-    border-bottom: 1px solid #e3e3e3
-  }
-  
-  .article-metadata a:hover {
-    color: #333;
-    text-decoration: none;
-  }
-  
-  .article-svg {
-    width: 25px;
-    height: 25px;
-    vertical-align: middle;
-  }
-  
-  .account-img {
-    height: 125px;
-    width: 125px;
-    margin-right: 20px;
-    margin-bottom: 16px;
-  }
-  
-  .account-heading {
-    font-size: 2.5rem;
-  }
+}
+
+ul {
+  margin: 0;
+}
+
+.bg-steel {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+header .site-header .bg-steel{
+  background-color: #5f788a;
+  margin-bottom: 0%;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #dbcbcb;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+
+}
+
+.content-section {
+  background: rgba(255, 255, 255, 0.4);
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #444444;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+
+/* Sidebar */
+.sidebar {
+position: absolute;
+width: 70px;
+min-width: 70px; /* Ensure a minimum width */
+height: 100vh;
+background: #fff;
+overflow: hidden;
+transition: width 0.5s; /* Transition property specified */
+z-index: 0;
+}
+
+.sidebar:hover {
+width: 300px; /* Increase width on hover */
+}
+
+/* Sidebar List */
+.sidebar ul {
+position: relative;
+height: 100vh;
+margin: 0;
+padding: 0;
+}
+
+.sidebar ul li {
+list-style: none;
+
+}
+
+.sidebar ul li:hover {
+background: #f3f3f3;
+}
+
+/* Sidebar List Items - Anchors */
+.sidebar ul li a {
+display: flex;
+align-items: center;
+text-decoration: none;
+color: #ffffff;
+width: 100%; /* Ensure links take up full width */
+box-sizing: border-box; /* Include padding and border in the element's total width */
+padding: 10px; /* Increase padding for clickable area */
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a .text:hover{
+color: #333;
+}
+
+
+/* Sidebar List Items - Icon */
+.sidebar ul li a .icon,
+.sidebar ul li .icon {
+display: flex;
+justify-content: center;
+align-items: center;
+min-width: 60px;
+height: 60px;
+font-size: 2em;
+}
+
+/* Sidebar List Items - Text */
+.sidebar ul li a .text,
+.sidebar ul li .text {
+height: 60px;
+display: flex;
+align-items: center;
+font-size: 1em;
+color: #ffffff;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+white-space: nowrap;
+padding: 30px 50px;
+padding-right: 100%;
+margin-left: -40px;
+}
+
+
+
+/* Specific Icon and Text Adjustments */
+.sidebar ul li .icon {
+font-size: 2em;
+}
+
+.sidebar ul li .text {
+font-size: 1.2em; /* Added 'em' unit */
+font-weight: 500;
+}
+/* Wrapper for the main content and sidebar */
+.wrapper {
+position: relative;
+overflow-x: hidden; /* Ensure no horizontal overflow */
+}
+
+/* Main Content */
+.main-content {
+margin-left: 60px; /* Adjust to match sidebar width */
+/* Add more margin if needed to avoid overlap */
+transition: margin-left 0.5s; /* Add transition effect */
+z-index: 1; /* Ensure main content stays above sidebar */
+}
+
+/* Sidebar */
+.sidebar {
+position: fixed; /* Change to fixed for a sticky sidebar */
+width: 60px;
+height: 100vh;
+background: rgb(2,13,19);
+overflow: hidden;
+transition: width 0.5s; /* Transition property specified */
+z-index: 2; /* Ensure sidebar stays above main content */
+margin-top: 4%;
+}
+
+.sidebar:hover {
+width: 300px; /* Increase width on hover */
+}
+
+#space{
+margin-top: 70px;
+}
+
+.card {
+margin-bottom: 10px;
+}
+
+.btn-linkn {
+font-weight: 650;
+color: rgb(255, 255, 255);
+text-decoration: none;
+padding: 100%;
+}
+
+.btn-outline-info{
+  position: absolute;
+  right: 4%;
+
+}
+
+.space{
+word-spacing: 100px;
+padding-right: 100%;
+}
+
+.navbar-brand{
+margin-left: auto;
+}
+
+#submit{
+background-color:rgba(255, 255, 255, 0.4);
+color: white;
+border-color: white;
+text-emphasis-style: 1;
+}
+
+
+header{
+  position:fixed;
+  z-index: 3;
+  background-color: black;
+}
+

@@ -48,7 +48,7 @@ class AddCasesForm(forms.Form):
         self.fields[formAddCases[2]] = forms.ChoiceField( widget = fms.Select2Widget(attrs={'style': 'width: 100%;'}), choices = case_data)
 
 class SendRequestForm(forms.Form):
-    def __init__(self, case_data, *args, **kwargs):
+    def __init__(self, case_data = {}, *args, **kwargs):
         super(SendRequestForm, self).__init__(*args, **kwargs)
         # Iterate through case data to dynamically create form fields
         for case_id, documents in case_data.items():

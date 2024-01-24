@@ -14,7 +14,6 @@ urlpatterns = [
     path('removeusers/', views.RemoveUsers.as_view(), name='removeUsers'),
     path('changeincharge/', views.ChangeIncharge.as_view(), name='changeIncharge'), 
     
-
     ]
 # allCases -> {'0': [['102', 'Ginson vs Yogi']], '1': ['0x28379662D72D25660af75b7F71D645303713C1cf', '0xbd5E32346805A87aaBD814D495404F6c04eB89a9'], '2': ['owner', 'Milind']}
 # allUsers -> {'0': ['0x28379662D72D25660af75b7F71D645303713C1cf', '0xbd5E32346805A87aaBD814D495404F6c04eB89a9'], '1': ['owner', 'Milind']}

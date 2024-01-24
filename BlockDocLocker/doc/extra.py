@@ -180,8 +180,8 @@ class UPMapping:
             doctype= file.content_type
             for _ in range(3):
                 cid = False
-                # cid = upload(file, "None")
-                cid = "True"
+                cid = upload(file, "None")
+                # cid = "True"
                 if cid: break
             else:   raise ValueError(f"CID cannot be created please try later  {file.name}")
             ls.append([

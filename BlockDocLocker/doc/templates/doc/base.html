@@ -13,8 +13,8 @@
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'doc/main.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'doc/main.css' %}">
 
     <!-- Include necessary scripts -->
     <script src="https://c0f4f41c-2f55-4863-921b-sdk-docs.github.io/cdn/metamask-sdk.js"></script>
@@ -23,41 +23,57 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="{% static 'index.js' %}"></script>
 </head>
-<header class="site-header bg-steel"><h1>Forensic Document verification</h1></header>
+<header class="site-header bg-steel"><h1><a href="{%url 'doc-home'%}" style="text-decoration: none; user-select: none; color: black;">Forensic Document verification</a></h1></header>
 <body>
     <div class="sidebar">
         <ul>
             <li>
-                <a href="/documents/?meth=viewDocuments">
+                <a href="{%url 'viewDocuments'%}">
                     <span class="icon"><ion-icon name="eye-outline"></ion-icon></span>
                     <span class="text ">View Document</span>
                 </a>
             </li>
 
             <li>
-                <a href="/uploadDocument/">
+                <a href="{%url 'uploadDocuments'%}" >
                     <span class="icon"><ion-icon name="cloud-upload-outline"></ion-icon></span>
                     <span class="text">Upload Document</span>
                 </a>
             </li>
 
             <li>
-                <a href="/addUsers/">
+                <a  href="{%url 'addUsers'%}">
                     <span class="icon"><ion-icon name="person-add-outline"></ion-icon></span>
                     <span class="text">Add User</span>
                 </a>
             </li>
 
             <li>
-                <a href="/checkRequests/?meth=checkRequests">
+                <a href="{%url 'sendRequests'%}" >
                     <span class="icon"><ion-icon name="git-pull-request-outline"></ion-icon></span>
-                    <span class="text">Requests</span>
+                    <span class="text">Send Requests</span>
                 </a>
             </li>
             <li>
-                <a href="/approveRequests/?meth=checkRequests">
+                <a href="{%url 'checkApprovals'%}">
                     <span class="icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
                     <span class="text">Approve</span>
+                </a>
+            </li>
+            <li>
+                <a href="{%url 'addCases'%}">
+                    <span class="icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+                    <span class="text">Add Cases</span>
+                </a>
+            </li><li>
+                <a href="{%url 'removeUsers'%}">
+                    <span class="icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+                    <span class="text">Remove Users</span>
+                </a>
+            </li><li>
+                <a href="{%url 'changeIncharge'%}">
+                    <span class="icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+                    <span class="text">Change Incharge</span>
                 </a>
             </li>
         </ul>
@@ -74,7 +90,8 @@
                 {% endfor %}
                 {% endif %}
                 <section id="space">
-                    {% block content %}{% endblock %}
+                    {% block content %}
+                    {% endblock %}
                 </section>
             </div>
         </div>
