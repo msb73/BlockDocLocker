@@ -72,6 +72,7 @@ class ChangeIncharge(FormView):
             form = self.form_class(case_data = Mapping.down_change_incharge(data = request.POST.get("data")))
             form.is_bound = False
             return render(request, self.template_name, {'form': form})
+        
         if "users" in request.POST:
             context = UPMapping.get_context("changeInCharge", func = UPMapping.up_change_incharge, data = request.POST)
             print(context)
@@ -93,6 +94,9 @@ class uploadDocuments(FormView):
             form = self.form_class(case_data = request.session["case_data"])
             form.is_bound = False
             return render(request, self.template_name, {"form" : form})
+        
+
+
         if "caseNo" in request.POST:
             form = self.get_form(form_class=FileFieldForm)
             print(f'{request.session["case_data"]=}') 

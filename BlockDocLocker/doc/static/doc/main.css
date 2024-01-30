@@ -1,4 +1,4 @@
-body {
+/* body {
   background: #fafafa;
   color: #333333;
   /* background-image: url('https://www.cloud4c.com/vn/sites/vn/files/2023-11/Threat-hunting-cloud4c-webpage-1_0.webp'); Replace 'path/to/your/image.jpg' with your image path */
@@ -218,8 +218,11 @@ width: 300px; /* Increase width on hover */
 margin-top: 70px;
 }
 
-.card {
-margin-bottom: 10px;
+.card{
+
+  margin: auto;
+  width: 100%;
+
 }
 
 .btn-linkn {
@@ -257,4 +260,5 @@ header{
   z-index: 3;
   background-color: black;
 }
+
 

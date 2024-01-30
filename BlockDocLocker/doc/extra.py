@@ -167,6 +167,8 @@ class UPMapping:
             ls[1].append(user)
         return ls
     
+    # ("documentName", "caseNo", "file_field", "description")
+
     def up_upload_documents(data, **kwargs):
         documentName = data.getlist(formUploadDocuments[0])
         caseNo = data.getlist(formUploadDocuments[1])

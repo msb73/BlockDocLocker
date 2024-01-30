@@ -23,7 +23,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="{% static 'index.js' %}"></script>
 </head>
-<header class="site-header bg-steel"><h1><a href="{%url 'doc-home'%}" style="text-decoration: none; user-select: none; color: black;">Forensic Document verification</a></h1></header>
+<header class="site-header bg-steel"><h1><a href="{%url 'viewDocuments'%}" style="text-decoration: none; user-select: none; color: black;">Forensic Document verification</a></h1></header>
 <body>
     <div class="sidebar">
         <ul>
@@ -62,24 +62,24 @@
             </li>
             <li>
                 <a href="{%url 'addCases'%}">
-                    <span class="icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+                    <span class="icon"><ion-icon name="medkit-outline"></ion-icon></span>
                     <span class="text">Add Cases</span>
                 </a>
             </li><li>
                 <a href="{%url 'removeUsers'%}">
-                    <span class="icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+                    <span class="icon"><ion-icon name="person-remove-outline"></ion-icon></span>
                     <span class="text">Remove Users</span>
                 </a>
             </li><li>
                 <a href="{%url 'changeIncharge'%}">
-                    <span class="icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+                    <span class="icon"><ion-icon name="people-circle-outline"></ion-icon></span>
                     <span class="text">Change Incharge</span>
                 </a>
             </li>
         </ul>
     </div>
 
-    <main role="main" class="container main-content">
+    <main role="main" class="container">
         <div class="row">
             <div class="col-md-12">
                 {% if messages %}

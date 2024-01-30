@@ -2,85 +2,66 @@
 {% extends "doc/base.html" %}
 {% block content %}
 
-
 <head>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-    var checkbox = document.getElementById("trigger");
-    checkbox.addEventListener('change', function(event) {
-      if (event.target.type === 'checkbox') {
+    document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener('change', function (event) {
+        if (event.target.matches('#trigger input[type="checkbox"]')) {
           var gitElement = document.getElementById(event.target.value);
-          if(event.target.checked){
+          if (event.target.checked) {
             var dateInput = document.createElement('input');
             dateInput.type = 'date';
             dateInput.id = event.target.value + "cal";
-            dateInput.name = "dates"
+            dateInput.name = "dates";
             dateInput.value = "{{date}}";
             dateInput.required = true;
             gitElement.appendChild(dateInput);
             console.log('Clicked checkbox id:');
+          } else {
+            var calElement = document.getElementById(event.target.value + "cal");
+            if (calElement) {
+              gitElement.removeChild(calElement);
+            }
           }
-          else {
-            gitElement.removeChild(document.getElementById(event.target.value + "cal"))
         }
-      }
-  });
-
-}
-);
-
-
-
-  </script>
-
-
-
+      });
+    });
   </script>
 </head>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    <div id="trigger">
-      {% for field in form %}
-      <div class="card">
-        <div class="card-header collapsed" id="heading{{ forloop.counter }}" data-toggle="collapse"
-          data-target="#collapse{{ forloop.counter }}" aria-expanded="false"
-          aria-controls="collapse{{ forloop.counter }}">
-          <h5 class="mb-0">
-            <button class="btn btn-linkn collapse show" type="button">
-              {{ field.label }}
-            </button>
-          </h5>
-        </div>
 
-        <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}">
-          <div class="card-body">
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-12 space">
-                  <table class="table table-striped">
-                    {% for id in field %}
-                    <tr>
-                      <div>
-                        <td>{{id}}</td>
-                      </div>
-                    </tr>
-                    {% endfor %}
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div id="trigger">
+    {% for field in form %}
+    <div class="card">
+      <div class="card-header collapsed" id="heading{{ forloop.counter }}" data-toggle="collapse"
+        data-target="#collapse{{ forloop.counter }}" aria-expanded="false"
+        aria-controls="collapse{{ forloop.counter }}">
+        <h5 class="mb-0">
+          <button class="btn btn-link collapse show" type="button">
+            {{ field.label }}
+          </button>
+        </h5>
       </div>
-      {% endfor %}
+      <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}">
+        <table class="table table-striped">
+          {% for id in field %}
+          <tr>
+            {{ id }}
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
 
     </div>
-    <button type="submit" class="btn btn-outline-info" style="float: right; margin: 10px;">Submit</button>
-  </form>
-
+    {% endfor %}
+  </div>
+  <button type="submit" class="btn btn-outline-info" style="float: right; margin: 10px;">Submit</button>
+</form>
 
 {% endblock %}
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
