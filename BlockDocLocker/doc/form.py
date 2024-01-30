@@ -55,7 +55,10 @@ class SendRequestForm(forms.Form):
             case_field_name = f'case_{case_id}'   
             self.fields[case_field_name] = forms.MultipleChoiceField(
                 choices=[(doc[formCheckRequests[0]],
-                    format_html("{}  {} <td>{}</td>".format(f'<td>{doc[formCheckRequests[0]]}</td>', f'<td>{doc[formCheckRequests[1]]}</td>', f'<div id = "{doc[formCheckRequests[0]]}"> </div>'))) 
+                    format_html("{}  {} <td>{}</td>".format(
+                        f'<td>{doc[formCheckRequests[0]]}</td>', 
+                        f'<td>{doc[formCheckRequests[1]]}</td>', 
+                        f'<div id = "{doc[formCheckRequests[0]]}"> </div>'))) 
                         for doc in documents],
                 widget=forms.CheckboxSelectMultiple(attrs={'class': 'document-checkbox', "name" : "ids"}) 
             )

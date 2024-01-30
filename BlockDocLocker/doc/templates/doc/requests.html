@@ -34,6 +34,7 @@
   {{ form.non_field_errors }}
   <div id="trigger">
     {% for field in form %}
+    
     <div class="card">
       <div class="card-header collapsed" id="heading{{ forloop.counter }}" data-toggle="collapse"
         data-target="#collapse{{ forloop.counter }}" aria-expanded="false"
@@ -47,8 +48,21 @@
       <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}">
         <table class="table table-striped">
           {% for id in field %}
+          <th>
+            <td>
+              Id
+            </td>
+            <td>
+              Name
+            </td>
+            <td>
+              Date
+            </td>
+          </th>
           <tr>
+            <td>
             {{ id }}
+          </td>
           </tr>
           {% endfor %}
         </table>
