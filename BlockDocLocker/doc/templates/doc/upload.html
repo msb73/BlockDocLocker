@@ -22,10 +22,11 @@
             <fieldset class="form-group">
                 {{ form|crispy }}
             </fieldset>
+            <button class="btn btn-outline-info" style="float: inline-end;" type="submit" name="submit"
+            onclick="submitForm()">Submit</button>
         </form>
     </div>
-    <button class="btn btn-outline-info" style="float: inline-end;" type="submit" name="submit"
-            onclick="submitForm()">Submit</button>
+
     <div class="form-group">
         <button class="btn btn-outline-success" id="add-form">
             <span class="plus-minus-symbol">+</span>

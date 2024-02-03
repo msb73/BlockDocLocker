@@ -1,8 +1,10 @@
 from pinatapy import PinataPy
 import requests
 from django.contrib import messages
-
-pinata = PinataPy('a2aa63cbb182b72917e7', '179903210e9d74976eb37dfcbac17acda31fd581080244ba6fa68f556da0e236')
+import os
+from dotenv import load_dotenv
+load_dotenv()
+pinata = PinataPy(os.getenv("JSWT"), os.getenv("PINATA_API_KEY"))
 
 def upload(file, description):
     response=pinata.pin_file_to_ipfs(file, 
