@@ -16,14 +16,16 @@ class Mapping:
     def down_view_documents(data ) -> list[dict]:
         ls = []
         for i in json.loads(data):
-                    ls.append({
-                        tableViewDocs[0] : i[0],
-                        tableViewDocs[1] : int(i[1]),
-                        tableViewDocs[2] : int(i[2]),
-    		    	    tableViewDocs[3] : format_html("<a href = '{}' target='_blank'> Click </a>","https://ipfs.io/ipfs/"+ i[3]),
-    		    	    tableViewDocs[4] : dt.fromtimestamp((int)(i[4])),
-    		    	    tableViewDocs[5] : i[5], 
-                    })
+            if [1] == "0":
+                continue
+            ls.append({
+                tableViewDocs[0] : i[0],
+                tableViewDocs[1] : int(i[1]),
+                tableViewDocs[2] : int(i[2]),
+    		    tableViewDocs[3] : format_html("<a href = '{}' target='_blank'> Click </a>","https://ipfs.io/ipfs/"+ i[3]),
+    		    tableViewDocs[4] : dt.fromtimestamp((int)(i[4])),
+    		    tableViewDocs[5] : i[5], 
+            })
         return (ls)
     
     def down_user_cases(data : str) -> list[int]:

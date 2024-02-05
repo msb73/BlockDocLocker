@@ -1,0 +1,42 @@
+{% extends "doc/base.html" %}
+{% block content %}
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script>
+        var check ;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var selectedOptions = JSON.parse(sessionStorage.getItem('selectedOptions')) || {};
+            for (var optionId in selectedOptions) {
+                if (selectedOptions.hasOwnProperty(optionId)) {
+                    var checkbox = document.getElementById(optionId);
+                    if (checkbox) {
+                        checkbox.checked = selectedOptions[optionId];
+                    }
+                }
+            }
+        });
+
+
+        function updateSessionStorage(checkbox) {
+            var selectedOptions = JSON.parse(sessionStorage.getItem('selectedOptions')) || {};
+            selectedOptions[checkbox.id] = checkbox.checked;
+            sessionStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
+        }
+    </script>
+</head>
+
+<body>
+
+    {% load render_table from django_tables2 %}
+
+    <form method="post">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}">
+        {% render_table table 'django_tables2/bootstrap.html' %}
+        <input type="submit" value="Submit" id="submit" , name="submit" class="btn btn-outline-info" style="float: inline-end;">
+    </form>
+</body>
+
+</html>
+{% endblock %}

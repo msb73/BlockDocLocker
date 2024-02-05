@@ -182,7 +182,7 @@ class ApproveRequests(SingleTableView):
     table_data = []
     table_class = CheckApprovalsTable
     model = DummyModel
-    template_name = 'doc/viewDocuments.html'
+    template_name = 'doc/approval.html'
     def get(self, request, *args, **kwargs):
         if request.method == "GET" and not request.GET:  # if its empty 
             context = Mapping.get_context(meth= "checkApprovals", redirect = "checkApprovals")

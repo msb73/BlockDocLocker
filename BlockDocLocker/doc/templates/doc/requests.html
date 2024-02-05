@@ -47,7 +47,6 @@
       </div>
       <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}">
         <table class="table table-striped">
-          {% for id in field %}
           <th>
             <td>
               Id
@@ -59,6 +58,8 @@
               Date
             </td>
           </th>
+          {% for id in field %}
+
           <tr>
             <td>
             {{ id }}
