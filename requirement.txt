@@ -1,0 +1,9 @@
+django
+django-tables2
+django-select2
+bootstrap4
+pinatapy-vourhey
+python-dotenv
+django-crispy_forms
+
+[[102000000001], [1705091400]]

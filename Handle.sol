@@ -60,17 +60,18 @@ struct IOUser {
 }
 
 struct User {
-        address userId;
-        userType usertype;
-		string username;
-		uint256 deptNumber;
-        bool isActive;
-        uint256 [] caseIds;
-        mapping(uint256 documentId => uint256 time ) shareddocs;
-        uint256[] vrequestsarr; 
-        uint256[] sharedarr; 
-        uint256 arr_index;
+        address userId;   // store address
+        userType usertype;  // ISSUER / USER
+		string username; // Name of User
+		uint256 deptNumber; // 
+        bool isActive; // Deleted or Not
+        uint256 [] caseIds; // Actual caseIds Incharge
+        mapping(uint256 documentId => uint256 time ) shareddocs; // time  
+        uint256[] sharedDocsRequestIndex; // shared address documentid 
+        uint256 arr_index; 
 }
+
+
 
 struct Case {
     string caseName;
@@ -104,6 +105,11 @@ struct Request {
     uint256 required_time;
     Status status;
 
+}
+
+struct SharedDoc{
+    uint256 documentId;
+    uint256 required_time;
 }
 
 struct IORequest {
@@ -189,7 +195,7 @@ function viewDocuments() validUser external view returns (Document[]  memory)  {
         for( uint256 i = 0; i < users[msg.sender].caseIds.length ; i++ ){
             len+= cases[users[msg.sender].caseIds[i]].documentIds.length;
         }
-        Document  [] memory toView = new Document[]( len + users[msg.sender].sharedarr.length);
+        Document  [] memory toView = new Document[]( len + users[msg.sender].sharedDocsRequestIndex.length);
         len = 0;
         for( uint256 i = 0; i < users[msg.sender].caseIds.length ; i++ ){
             for ( uint256 j = 0; j < cases[users[msg.sender].caseIds[i]].documentIds.length ; j++ ){
@@ -198,16 +204,17 @@ function viewDocuments() validUser external view returns (Document[]  memory)  {
                 len +=1;
             }
         }
-        for (uint8 i = 0; i < users[msg.sender].sharedarr.length; i++){
-            if ( users[msg.sender].shareddocs[ users[msg.sender].sharedarr[i] ] > block.timestamp ){
-                toView[len] = documents[ users[msg.sender].sharedarr[i] ];
+        uint[] storage indexes = users[msg.sender].sharedDocsRequestIndex; 
+        for (uint8 i = 0; i < indexes.length; i++){
+            if ( requests[indexes[i]].required_time  > block.timestamp ){
+                toView[len] = documents[ requests[indexes[i]].documentId ];
                 toView[len]._issuer = 0x0000000000000000000000000000000000000000;
                 len +=1;
             } 
         }
-        
         return  toView ;
 }
+
 function allDocuments() validUser external view returns ( IODocument[] memory, uint256 [] memory,  string [] memory)  {
     IODocument [] memory docs = new IODocument[](documentsCount);
     uint256 [] memory idxs = new uint256[](userIds.length);
@@ -329,6 +336,45 @@ function allCases() external view onlyOwner returns (IOCases [] memory , address
 
 }
 
+// function checkRequests() external view validUser returns (uint256 [] memory, string[] memory){
+//     uint256 [] memory documentIds = new uint256[](users[msg.sender].sharedDocsRequestIndex.length);
+//     string [] memory documentNames = new string[](users[msg.sender].sharedDocsRequestIndex.length);    
+//     for (uint8 i = 0; i < users[msg.sender].sharedDocsRequestIndex.length; i++){
+//         if (requests[users[msg.sender].sharedDocsRequestIndex[i]].status == Status.PENDING){
+//         documentIds[i] = requests[users[msg.sender].sharedDocsRequestIndex[i]].documentId;
+//         documentNames[i] = documents[documentIds[i]].documentName;
+//     }
+//     }
+//     return (documentIds, documentNames);
+// }
+
+function sendRequests( uint256 [] calldata ids, uint256 [] calldata reqtimes ) external validUser  {
+
+    for (uint8 i = 0; i < ids.length; i++){
+        if(cases[ documents[ids[i]].caseNo ].incharge != msg.sender){
+            
+            if(users[msg.sender].shareddocs[ids[i]] == 0){
+                requests[last_index] = Request({
+                    sender : msg.sender, 
+                    documentId : ids[i], 
+                    _timestamp : block.timestamp + 86400, 
+                    required_time : reqtimes[i],
+                    status : Status.PENDING
+            });
+                
+            // users[msg.sender].sharedDocsRequestIndex.push(last_index);
+            cases[ documents[ids[i]].caseNo ].requests.push(last_index);
+            last_index +=1;
+            }
+
+        }
+    }
+
+    
+	
+}
+
+
 function checkApprovals() external view validUser returns (IORequest[] memory){
     require (users[msg.sender].usertype == userType.ISSUER, "^User is Not Issuer$");
     uint len = 0;
@@ -358,56 +404,28 @@ function checkApprovals() external view validUser returns (IORequest[] memory){
     return reqs ;
 }
 
-function checkRequests() external view validUser returns (uint256 [] memory, string[] memory){
-    uint256 [] memory documentIds = new uint256[](users[msg.sender].vrequestsarr.length);
-    string [] memory documentNames = new string[](users[msg.sender].vrequestsarr.length);    
-    for (uint8 i = 0; i < users[msg.sender].vrequestsarr.length; i++){
-        if (requests[users[msg.sender].vrequestsarr[i]].status == Status.PENDING){
-        documentIds[i] = requests[users[msg.sender].vrequestsarr[i]].documentId;
-        documentNames[i] = documents[documentIds[i]].documentName;
-    }
-    }
-    return (documentIds, documentNames);
-}
 
-function sendRequests( uint256 [] calldata ids, uint256 [] calldata reqtimes ) external validUser  {
-
-    for (uint8 i = 0; i < ids.length; i++){
-        if(cases[ documents[ids[i]].caseNo ].incharge != msg.sender){
-            
-            if(users[msg.sender].shareddocs[ids[i]] == 0){
-                requests[last_index] = Request({
-                    sender : msg.sender, 
-                    documentId : ids[i], 
-                    _timestamp : block.timestamp + 86400, 
-                    required_time : reqtimes[i],
-                    status : Status.PENDING
-            });
-                
-            users[msg.sender].vrequestsarr.push(last_index);
-            cases[ documents[ids[i]].caseNo ].requests.push(last_index);
-            last_index +=1;
-            }
-
-        }
-    }
-
-    
-	
-}
 
 
 function approveRequests(uint[] calldata indexes) external validUser  {
+    // add index to sharedDocsRequestIndex 
+    // change requets status to approve
     require (users[msg.sender].usertype == userType.ISSUER, "^User is Not Issuer$");
-    for (uint256 i = 0; i < indexes.length; i++){
+    for (uint256 i = 0; i < indexes.length; i++){ 
         if (cases[documents[requests[indexes[i]].documentId].caseNo].incharge == msg.sender){
-            users[requests[indexes[i]].sender].sharedarr.push(requests[indexes[i]].documentId);
-            users[requests[indexes[i]].sender].shareddocs[requests[indexes[i]].documentId] = requests[indexes[i]].required_time;
+            users[requests[indexes[i]].sender].sharedDocsRequestIndex.push(indexes[i]);
+
             requests[indexes[i]].status = Status.APPROVE;
         }
     }
 }
 
+
+
+function getreqArr(uint index) external view validUser returns (Request memory){
+
+    return requests[index];
+}
 
 }
     

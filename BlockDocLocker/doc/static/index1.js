@@ -398,18 +398,46 @@ function connectContract(w3){
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "checkRequests",
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "index",
+            "type": "uint256"
+          }
+        ],
+        "name": "getreqArr",
         "outputs": [
           {
-            "internalType": "uint256[]",
+            "components": [
+              {
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "documentId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_timestamp",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "required_time",
+                "type": "uint256"
+              },
+              {
+                "internalType": "enum Handle.Status",
+                "name": "status",
+                "type": "uint8"
+              }
+            ],
+            "internalType": "struct Handle.Request",
             "name": "",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "string[]",
-            "name": "",
-            "type": "string[]"
+            "type": "tuple"
           }
         ],
         "stateMutability": "view",
@@ -484,7 +512,7 @@ function connectContract(w3){
         "type": "function"
       }
     ]`);
-      return  new w3.eth.Contract(abi, "0x381f978eB0220dBE2245caC3Ec2c007BD4009c6D");
+      return  new w3.eth.Contract(abi, "0xdFf2eCE7738aD7E5690542F8B16c5A4b35a73CC4");
 
 }
 
@@ -493,7 +521,7 @@ async function sendDataTransaction(methodName, args) {
     // Use the 'send' function for transactions 
     obj = {
       from: account,
-      to : "0x381f978eB0220dBE2245caC3Ec2c007BD4009c6D",
+      to : "0xdFf2eCE7738aD7E5690542F8B16c5A4b35a73CC4",
       gasPrice: await w3.eth.getGasPrice(),
       'chainId': 1337,
     }
@@ -516,7 +544,7 @@ async function callContractFunction(methodName, ...args) {
       
         const result = contract.methods[methodName](...args).call({
             from: account,
-            to : "0x381f978eB0220dBE2245caC3Ec2c007BD4009c6D",
+            to : "0xdFf2eCE7738aD7E5690542F8B16c5A4b35a73CC4",
             gasPrice: await w3.eth.getGasPrice(),
             'chainId': 1337,
         });

@@ -45,6 +45,7 @@ class Mapping:
                 tableCheckApprovals[4] : dt.fromtimestamp((int)(i[6])),
 	            "CheckBox" : format_html(f"<input type='checkbox' id='option{i[0]}' name='selected_options' value='{i[0]}' onclick='updateSessionStorage(this)'> "), 
                     })
+        print(ls)
         return ls
 
     def down_all_cases(self, dic) -> (list[tuple], list[tuple]):
@@ -118,6 +119,7 @@ class UPMapping:
                    "content" : func(data = data, **kwargs)}
               
     def up_approve_requests(data):
+        print(data)
         return [int(i) for i in data]
     
     def up_send_requests(data):
