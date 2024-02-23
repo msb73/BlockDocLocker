@@ -18,10 +18,12 @@
 <div class="content-section">
     <div id="forms-container">
         <form id="myform" method="POST" enctype="multipart/form-data">
+            <div id = "outershell">
             {% csrf_token %}
             <fieldset class="form-group">
                 {{ form|crispy }}
             </fieldset>
+        </div>
             <button class="btn btn-outline-info" style="float: inline-end;" type="submit" name="submit"
             onclick="submitForm()">Submit</button>
         </form>
@@ -55,7 +57,10 @@
 
         addFormButton.addEventListener('click', function () {
             if (formCount < 10) { // Limit forms to 10
-                const newForm = document.createElement('form');
+                const newForm = document.createElement("fieldset");
+                newForm.setAttribute('class', "form-group")
+                const outershell = document.getElementById("outershell")
+                // const newForm = document.createElement('form');
                 newForm.method = 'POST';
                 newForm.enctype = 'multipart/form-data';
                 newForm.innerHTML = `
@@ -64,7 +69,7 @@
                         {{ form|crispy }}
                     </fieldset>
                 `;
-                formsContainer.appendChild(newForm);
+                outershell.appendChild(newForm);
                 formCount++;
             } else {
                 alert('Maximum 10 forms allowed.');
@@ -72,7 +77,7 @@
         });
 
         removeFormButton.addEventListener('click', function () {
-            const forms = formsContainer.getElementsByTagName('form');
+            const forms = formsContainer.getElementsByTagName('outershell');
             if (formCount > 1) { // Ensure at least one form remains
                 forms[forms.length - 1].remove();
                 formCount--;
