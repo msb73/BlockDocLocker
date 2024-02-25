@@ -64,10 +64,7 @@
                 newForm.method = 'POST';
                 newForm.enctype = 'multipart/form-data';
                 newForm.innerHTML = `
-                {% csrf_token %}
-                    <fieldset class="form-group">
                         {{ form|crispy }}
-                    </fieldset>
                 `;
                 outershell.appendChild(newForm);
                 formCount++;
@@ -77,7 +74,7 @@
         });
 
         removeFormButton.addEventListener('click', function () {
-            const forms = formsContainer.getElementsByTagName('outershell');
+            const forms = formsContainer.getElementsByTagName('fieldset');
             if (formCount > 1) { // Ensure at least one form remains
                 forms[forms.length - 1].remove();
                 formCount--;
