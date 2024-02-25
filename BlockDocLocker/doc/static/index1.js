@@ -42,7 +42,6 @@ async function retrieveResult() {
   (async () => {
     try {
       account = await retrieveResult();
-      console.log(account);
     } catch (error) {
       console.error("Not Connected", error);
     }
@@ -520,7 +519,7 @@ async function sendDataTransaction(methodName, args) {
     // console.log(...args);
     // Use the 'send' function for transactions 
     obj = {
-      from: account,
+      from: await retrieveResult(),
       to : "0xdFf2eCE7738aD7E5690542F8B16c5A4b35a73CC4",
       gasPrice: await w3.eth.getGasPrice(),
       'chainId': 1337,
@@ -543,7 +542,7 @@ async function callContractFunction(methodName, ...args) {
     try {
       
         const result = contract.methods[methodName](...args).call({
-            from: account,
+            from: await retrieveResult(),
             to : "0xdFf2eCE7738aD7E5690542F8B16c5A4b35a73CC4",
             gasPrice: await w3.eth.getGasPrice(),
             'chainId': 1337,

@@ -10,8 +10,8 @@
 
     </head>
     <body>
-        {{web3method}}
-<button id="sendDataButton" >Send Data</button>
+
+<button id="sendDataButton" hidden><h1> Redirecting ... </h1></button>
 
 
 
@@ -95,6 +95,12 @@
 
         }
 });
+
+    if(document.getElementById("sendDataButton")){ 
+        document.getElementById("sendDataButton").click();
+      }
+
+
     </script>
 
 
