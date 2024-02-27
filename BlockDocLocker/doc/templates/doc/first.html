@@ -38,9 +38,9 @@
                 promise.then(value => {   
                     raise(JSON.stringify(value));
                 }).catch((e) => {
-                    alert("rejected");
                     error = e;
                     raise("Document not uploaded all changes revoked");
+                    alert("Document not uploaded all changes revoked");
                     if(typeof(e) == String){
                        
 
@@ -88,7 +88,8 @@
                 // Continue with form submission or other actions
             }).catch((e) => {
                 raise("Error occured -> " + e.message.slice(e.message.indexOf('^') + 1, e.message.indexOf('$')))
-              }); 
+                alert("Error occured -> " + e.message.slice(e.message.indexOf('^') + 1, e.message.indexOf('$')))
+            }); 
         
         
     
