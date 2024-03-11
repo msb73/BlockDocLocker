@@ -511,7 +511,7 @@ function connectContract(w3){
         "type": "function"
       }
     ]`);
-      return  new w3.eth.Contract(abi, "0xdFf2eCE7738aD7E5690542F8B16c5A4b35a73CC4");
+      return  new w3.eth.Contract(abi, "0x5569f664b1FD409C6e3E0dA257Fc0f5bcF94d5Cf");
 
 }
 
@@ -520,7 +520,7 @@ async function sendDataTransaction(methodName, args) {
     // Use the 'send' function for transactions 
     obj = {
       from: await retrieveResult(),
-      to : "0xdFf2eCE7738aD7E5690542F8B16c5A4b35a73CC4",
+      to : "0x5569f664b1FD409C6e3E0dA257Fc0f5bcF94d5Cf",
       gasPrice: await w3.eth.getGasPrice(),
       'chainId': 1337,
     }
@@ -543,7 +543,7 @@ async function callContractFunction(methodName, ...args) {
       
         const result = contract.methods[methodName](...args).call({
             from: await retrieveResult(),
-            to : "0xdFf2eCE7738aD7E5690542F8B16c5A4b35a73CC4",
+            to : "0x5569f664b1FD409C6e3E0dA257Fc0f5bcF94d5Cf",
             gasPrice: await w3.eth.getGasPrice(),
             'chainId': 1337,
         });

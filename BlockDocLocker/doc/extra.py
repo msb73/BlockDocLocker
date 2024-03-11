@@ -15,6 +15,7 @@ class Mapping:
     
     def down_view_documents(data ) -> list[dict]:
         ls = []
+        print(data)
         for i in json.loads(data):
             if [1] == "0":
                 continue
@@ -26,6 +27,7 @@ class Mapping:
     		    tableViewDocs[4] : dt.fromtimestamp((int)(i[4])),
     		    tableViewDocs[5] : i[5], 
             })
+            
         return (ls)
     
     def down_user_cases(data : str) -> list[int]:
@@ -123,19 +125,16 @@ class UPMapping:
         return [int(i) for i in data]
     
     def up_send_requests(data):
-        print("called")
         dic = data.copy()
         # ids = len(data) -2
         # for i in range(ids):
         ls = [[], []]
         dic.pop("csrfmiddlewaretoken") 
         dates = iter(dic.pop("dates"))
-        for key in dic.keys():
+        for key in dic.keys(): 
             for documentId in dic.getlist(key):
-                print(documentId)
                 ls[0].append(int(documentId))
-                ls[1].append( int(dt.timestamp(dt.strptime(next(dates), "%Y-%H-%d"))) )
-                              
+                ls[1].append( int(dt.timestamp(dt.strptime(next(dates), "%Y-%m-%d"))) )
         return ls    
             
         # print(dates)
